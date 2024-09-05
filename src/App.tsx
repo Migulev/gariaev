@@ -1,5 +1,5 @@
 function App() {
-  return <></>
+  return <>pwa</>
 }
 
 export default App
