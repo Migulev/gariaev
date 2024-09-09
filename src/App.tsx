@@ -1,5 +1,7 @@
+import { Home } from './components/home'
+
 function App() {
-  return <>pwa</>
+  return <Home />
 }
 
 export default App
