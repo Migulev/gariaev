@@ -1,9 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
+import { usePersist } from '@/hooks/usePersist'
 import { formatTime } from '@/lib/utils'
-import { Pause, Play, Volume2, VolumeX, Clock, RotateCcw } from 'lucide-react'
-import { useState, useRef } from 'react'
+import { Clock, Pause, Play, Volume2, VolumeX } from 'lucide-react'
+import { useRef } from 'react'
+
+const IS_REVERSE_TIME_KEY = 'isReverseTime'
 
 type ControlPanelProps = {
   isPlaying: boolean
@@ -17,7 +20,7 @@ type ControlPanelProps = {
   currentTime: number
   duration: number
   onSeek: (time: number) => void
-  buffered: number // Add this new prop
+  buffered: number
 }
 
 export function ControlPanel({
@@ -32,17 +35,21 @@ export function ControlPanel({
   currentTime,
   duration,
   onSeek,
-  buffered, // Add this new prop
+  buffered,
 }: ControlPanelProps) {
-  const [isReverseTime, setIsReverseTime] = useState(false)
   const progressBarRef = useRef<HTMLDivElement>(null)
 
-  const toggleTimeDisplay = () => setIsReverseTime(!isReverseTime)
+  const [isReverseTime, setIsReverseTime] = usePersist(
+    IS_REVERSE_TIME_KEY,
+    false
+  )
 
+  const toggleTimeDisplay = () => {
+    setIsReverseTime(!isReverseTime)
+  }
   const displayTime = isReverseTime
-    ? formatTime(duration - currentTime)
+    ? '-' + formatTime(duration - currentTime)
     : formatTime(currentTime)
-  const displayDuration = isReverseTime ? '0:00' : formatTime(duration)
 
   const handleProgressBarClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (progressBarRef.current) {
@@ -88,11 +95,7 @@ export function ControlPanel({
           <div className='flex justify-between items-center'>
             <p className='text-sm font-medium'>Сейчас играет:</p>
             <Button onClick={toggleTimeDisplay} size='icon' variant='ghost'>
-              {isReverseTime ? (
-                <RotateCcw className='h-4 w-4' />
-              ) : (
-                <Clock className='h-4 w-4' />
-              )}
+              <Clock className='h-4 w-4' />
             </Button>
           </div>
           <p className='text-lg font-bold'>{currentAudio?.name}</p>
@@ -111,7 +114,7 @@ export function ControlPanel({
           </div>
           <div className='flex justify-between mt-1 text-sm'>
             <span>{displayTime}</span>
-            <span>{displayDuration}</span>
+            <span>{formatTime(duration)}</span>
           </div>
         </div>
       </CardContent>

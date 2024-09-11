@@ -9,7 +9,7 @@ export function TabsGroup({
   togglePlay,
 }: {
   matrices: Matrix[]
-  playing: number | null
+  playing: number | string | null
   togglePlay: (id: number, audioUrl: string) => void
 }) {
   const { favorites, toggleFavorite } = useFavorites()

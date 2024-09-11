@@ -1,16 +1,16 @@
-import { Matrix } from '@/types'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { usePersist } from './usePersist'
 
 const VOLUME_KEY = 'audioVolume'
 
 export function useAudioPlayer() {
-  const [currentAudio, setCurrentAudio] = useState<Matrix['id'] | null>(null)
+  const [currentAudio, setCurrentAudio] = useState<number | string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
-  const [volume, setVolume] = useState(() => {
-    const savedVolume = localStorage.getItem(VOLUME_KEY)
-    return savedVolume ? parseFloat(savedVolume) : 1
+
+  const [volume, setVolume] = usePersist(VOLUME_KEY, 1, {
+    converter: (value: string) => parseFloat(value),
   })
 
   const [progress, setProgress] = useState(0)
@@ -18,10 +18,6 @@ export function useAudioPlayer() {
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [buffered, setBuffered] = useState(0)
-
-  useEffect(() => {
-    localStorage.setItem(VOLUME_KEY, volume.toString())
-  }, [volume])
 
   const onVolumeChange = (newVolume: number) => setVolume(newVolume)
 
@@ -82,7 +78,7 @@ export function useAudioPlayer() {
     }
   }, [])
 
-  const togglePlay = (id: number, audioUrl: string) => {
+  const togglePlay = (id: number | string, audioUrl: string) => {
     switch (currentAudio) {
       case id:
         setIsPlaying(prev => !prev)
