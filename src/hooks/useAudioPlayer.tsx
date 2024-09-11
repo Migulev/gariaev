@@ -1,15 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { usePersist } from './usePersist'
 
-const VOLUME_KEY = 'audioVolume'
-
 export function useAudioPlayer() {
   const [currentAudio, setCurrentAudio] = useState<number | string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
 
-  const [volume, setVolume] = usePersist(VOLUME_KEY, 1, {
+  const [volume, setVolume] = usePersist('audioVolume', 1, {
     converter: (value: string) => parseFloat(value),
   })
 
