@@ -56,17 +56,17 @@ export function useAudioPlayer() {
   }
 
   return {
-    togglePlay,
-    progress,
-    volume,
-    onVolumeChange,
-    toggleMute,
-    isMuted,
-    currentAudio,
     isPlaying,
+    currentAudio,
+    progress,
+    buffered,
+    volume,
+    isMuted,
     duration,
     currentTime,
+    togglePlay,
+    toggleMute,
+    onVolumeChange,
     onSeek,
-    buffered,
   }
 }
