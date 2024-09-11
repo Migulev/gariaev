@@ -37,13 +37,10 @@ export function ControlPanel({
   onSeek,
   buffered,
 }: ControlPanelProps) {
-  const progressBarRef = useRef<HTMLDivElement>(null)
-
   const [isReverseTime, setIsReverseTime] = usePersist(
     IS_REVERSE_TIME_KEY,
     false
   )
-
   const toggleTimeDisplay = () => {
     setIsReverseTime(!isReverseTime)
   }
@@ -51,6 +48,7 @@ export function ControlPanel({
     ? '-' + formatTime(duration - currentTime)
     : formatTime(currentTime)
 
+  const progressBarRef = useRef<HTMLDivElement>(null)
   const handleProgressBarClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (progressBarRef.current) {
       const rect = progressBarRef.current.getBoundingClientRect()
@@ -109,6 +107,7 @@ export function ControlPanel({
               style={{ width: `${buffered}%` }}></div>
             {/* Playback progress bar */}
             <div
+              // !todo: add progress bar color
               className='absolute bg-progressBar h-2.5 rounded-full'
               style={{ width: `${progress}%` }}></div>
           </div>

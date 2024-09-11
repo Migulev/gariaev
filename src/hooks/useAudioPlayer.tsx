@@ -42,11 +42,8 @@ export function useAudioPlayer() {
       const duration = audioRef.current.duration
       setCurrentTime(currentTime)
       setDuration(duration)
-      if (duration > 0) {
-        setProgress((currentTime / duration) * 100)
-      } else {
-        setProgress(0)
-      }
+      if (duration > 0) setProgress((currentTime / duration) * 100)
+      else setProgress(0)
     }
   }, [])
 
@@ -63,12 +60,11 @@ export function useAudioPlayer() {
   }, [])
 
   useEffect(() => {
-    return () => {
-      stopProgressInterval()
-    }
+    return () => stopProgressInterval()
   }, [stopProgressInterval])
 
-  const updateBuffered = useCallback(() => {
+  const updateBuffered = useCallback((isNewAudio: boolean = false) => {
+    if (isNewAudio) setBuffered(0)
     if (audioRef.current) {
       const bufferedRanges = audioRef.current.buffered
       if (bufferedRanges.length > 0) {
@@ -77,6 +73,16 @@ export function useAudioPlayer() {
       }
     }
   }, [])
+
+  useEffect(() => {
+    if (audioRef.current) {
+      const audio = audioRef.current
+      const handleProgress = () => updateBuffered()
+      audio.addEventListener('progress', handleProgress)
+
+      return () => audio.removeEventListener('progress', handleProgress)
+    }
+  }, [currentAudio, updateBuffered])
 
   const togglePlay = (id: number | string, audioUrl: string) => {
     switch (currentAudio) {
@@ -103,9 +109,8 @@ export function useAudioPlayer() {
         startProgressInterval()
         newAudio.onloadedmetadata = () => {
           setDuration(newAudio.duration)
-          updateBuffered()
+          updateBuffered(true)
         }
-        newAudio.addEventListener('progress', updateBuffered)
         break
       }
     }
