@@ -2,21 +2,24 @@ import { useFavorites } from '@/hooks/useFavorites'
 import { MatrixCard } from './MatrixCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import { type Matrix } from '@/types'
+import { cn } from '@/lib/utils'
 
 export function TabsGroup({
   matrices,
   playing,
   togglePlay,
+  className,
 }: {
   matrices: Matrix[]
   playing: number | string | null
   togglePlay: (id: number, audioUrl: string) => void
+  className?: string
 }) {
   const { favorites, toggleFavorite } = useFavorites()
 
   return (
     // !todo: fix margin top change
-    <Tabs defaultValue='all' className='w-full'>
+    <Tabs defaultValue='all' className={cn('w-full', className)}>
       <TabsList>
         <TabsTrigger value='all'>All Matrices</TabsTrigger>
         <TabsTrigger value='favorites'>Favorites</TabsTrigger>
