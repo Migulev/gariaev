@@ -6,8 +6,6 @@ import { formatTime } from '@/lib/utils'
 import { Clock, Pause, Play, Volume2, VolumeX } from 'lucide-react'
 import { useRef } from 'react'
 
-const IS_REVERSE_TIME_KEY = 'isReverseTime'
-
 type ControlPanelProps = {
   isPlaying: boolean
   currentAudio: { name: string } | undefined
@@ -37,16 +35,22 @@ export function ControlPanel({
   onSeek,
   buffered,
 }: ControlPanelProps) {
-  const [isReverseTime, setIsReverseTime] = usePersist(
-    IS_REVERSE_TIME_KEY,
-    false
-  )
+  const [isReverseTime, setIsReverseTime] = usePersist('isReverseTime', false)
   const toggleTimeDisplay = () => {
     setIsReverseTime(!isReverseTime)
   }
-  const displayTime = isReverseTime
-    ? '-' + formatTime(duration - currentTime)
-    : formatTime(currentTime)
+
+  const straightTime =
+    !isNaN(currentTime) && isFinite(currentTime)
+      ? formatTime(currentTime)
+      : '00:00'
+  const reverseTime =
+    !isNaN(duration - currentTime) && isFinite(duration - currentTime)
+      ? '-' + formatTime(duration - currentTime)
+      : '-00:00'
+  const currentDuration = isReverseTime ? reverseTime : straightTime
+  const totalDuration =
+    !isNaN(duration) && isFinite(duration) ? formatTime(duration) : '00:00'
 
   const progressBarRef = useRef<HTMLDivElement>(null)
   const handleProgressBarClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -107,13 +111,15 @@ export function ControlPanel({
               style={{ width: `${buffered}%` }}></div>
             {/* Playback progress bar */}
             <div
-              // !todo: add progress bar color
               className='absolute bg-progressBar h-2.5 rounded-full'
-              style={{ width: `${progress}%` }}></div>
+              style={{ width: `${progress}%` }}>
+              {/* Rounded point at the end of progress bar */}
+              <div className='absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-progressBar rounded-full border-2 border-white'></div>
+            </div>
           </div>
           <div className='flex justify-between mt-1 text-sm'>
-            <span>{displayTime}</span>
-            <span>{formatTime(duration)}</span>
+            <span>{currentDuration}</span>
+            <span>{totalDuration}</span>
           </div>
         </div>
       </CardContent>
