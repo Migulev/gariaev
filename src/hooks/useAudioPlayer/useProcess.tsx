@@ -11,20 +11,23 @@ export function useProcess({
   const [duration, setDuration] = useState(0)
   const progressIntervalRef = useRef<number | null>(null)
 
-  const updateProgress = useCallback(() => {
-    if (audioRef.current) {
-      const currentTime = audioRef.current.currentTime
-      const duration = audioRef.current.duration
-      setCurrentTime(currentTime)
-      setDuration(duration)
+  const updateProgress = useCallback(
+    (isNewAudio: boolean = false) => {
+      if (audioRef.current) {
+        const currentTime = audioRef.current.currentTime
+        const duration = audioRef.current.duration
+        setCurrentTime(currentTime)
+        setDuration(duration)
 
-      if (duration > 0) setProgress((currentTime / duration) * 100)
-      else setProgress(0)
-    }
-  }, [audioRef])
+        if (isNewAudio) setProgress(0)
+        else if (duration > 0) setProgress((currentTime / duration) * 100)
+      }
+    },
+    [audioRef]
+  )
 
   const startProgressInterval = useCallback(() => {
-    updateProgress()
+    updateProgress(true)
     progressIntervalRef.current = window.setInterval(updateProgress, 1000)
   }, [updateProgress])
 
