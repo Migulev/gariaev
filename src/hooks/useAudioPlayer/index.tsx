@@ -13,9 +13,9 @@ export function useAudioPlayer() {
 
   const {
     progress,
+    buffered,
     duration,
     currentTime,
-    buffered,
     onSeek,
     startProgressInterval,
     stopProgressInterval,
