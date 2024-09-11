@@ -68,19 +68,18 @@ function App() {
         buffered={buffered}
       />
 
-      <div className='mb-4'>
-        <Input
-          type='text'
-          placeholder='Search matrices...'
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className='max-w-sm'
-        />
-      </div>
+      <Input
+        type='text'
+        placeholder='поиск матрицы...'
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        className='max-w-sm'
+      />
       <TabsGroup
         matrices={filteredMatrices}
         playing={currentAudio}
         togglePlay={togglePlay}
+        className='mt-4'
       />
     </div>
   )
