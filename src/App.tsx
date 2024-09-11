@@ -31,16 +31,16 @@ function App() {
   const {
     currentAudio,
     isPlaying,
-    progress,
-    togglePlay,
-    isMuted,
-    toggleMute,
     volume,
-    onVolumeChange,
+    isMuted,
+    progress,
+    buffered,
     currentTime,
     duration,
+    togglePlay,
+    toggleMute,
+    onVolumeChange,
     onSeek,
-    buffered,
   } = useAudioPlayer()
 
   return (
