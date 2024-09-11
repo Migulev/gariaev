@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useBuffer } from './useBuffer'
 
-export function useProcess({
+export function useProgress({
   audioRef,
 }: {
   audioRef: React.RefObject<HTMLAudioElement>
 }) {
   const [progress, setProgress] = useState(0)
-  const [buffered, setBuffered] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const progressIntervalRef = useRef<number | null>(null)
+
+  const { buffered, updateBuffered } = useBuffer({ audioRef })
 
   const updateProgress = useCallback(
     (isNewAudio: boolean = false) => {
@@ -42,47 +44,6 @@ export function useProcess({
     return () => stopProgressInterval()
   }, [stopProgressInterval])
 
-  const updateBuffered = useCallback(
-    (isNewAudio: boolean = false) => {
-      if (isNewAudio) setBuffered(0)
-      if (audioRef.current) {
-        const bufferedRanges = audioRef.current.buffered
-        const currentTime = audioRef.current.currentTime
-        const duration = audioRef.current.duration
-        if (bufferedRanges.length > 0 && duration > 0) {
-          let bufferedEnd = 0
-          for (let i = 0; i < bufferedRanges.length; i++) {
-            if (
-              bufferedRanges.start(i) <= currentTime &&
-              currentTime <= bufferedRanges.end(i)
-            ) {
-              bufferedEnd = bufferedRanges.end(i)
-              break
-            }
-          }
-          setBuffered((bufferedEnd / duration) * 100)
-        } else {
-          setBuffered(0)
-        }
-      }
-    },
-    [audioRef]
-  )
-
-  useEffect(() => {
-    if (audioRef.current) {
-      const audio = audioRef.current
-      const handleProgress = () => updateBuffered()
-      audio.addEventListener('progress', handleProgress)
-      audio.addEventListener('timeupdate', handleProgress)
-
-      return () => {
-        audio.removeEventListener('progress', handleProgress)
-        audio.removeEventListener('timeupdate', handleProgress)
-      }
-    }
-  }, [updateBuffered])
-
   const onSeek = useCallback(
     (seekTime: number) => {
       if (audioRef.current) {
@@ -91,7 +52,7 @@ export function useProcess({
         updateBuffered()
       }
     },
-    [updateProgress, updateBuffered]
+    [audioRef, updateProgress, updateBuffered]
   )
 
   return {

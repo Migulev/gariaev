@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { useProcess } from './useProcess'
+import { useProgress } from './useProgress'
 import { useSound } from './useSound'
 
 export function useAudioPlayer() {
@@ -21,7 +21,7 @@ export function useAudioPlayer() {
     stopProgressInterval,
     updateBuffered,
     setDuration,
-  } = useProcess({ audioRef })
+  } = useProgress({ audioRef })
 
   const togglePlay = (id: number | string, audioUrl: string) => {
     switch (currentAudio) {
