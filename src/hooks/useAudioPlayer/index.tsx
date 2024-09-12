@@ -17,9 +17,9 @@ export function useAudioPlayer() {
     duration,
     currentTime,
     onSeek,
-    startProgressInterval,
-    stopProgressInterval,
-    updateBuffered,
+    startProgress,
+    stopProgress,
+    updateBuffer,
     setDuration,
   } = useProgress({ audioRef })
 
@@ -29,26 +29,26 @@ export function useAudioPlayer() {
         setIsPlaying(prev => !prev)
         if (audioRef.current?.paused) {
           audioRef.current.play()
-          startProgressInterval()
+          startProgress()
         } else {
           audioRef.current?.pause()
-          stopProgressInterval()
+          stopProgress()
         }
         break
 
       default: {
         audioRef.current?.pause()
-        stopProgressInterval()
+        stopProgress()
         const newAudio = new Audio(audioUrl)
         setCurrentAudio(id)
         audioRef.current = newAudio
         audioRef.current.play()
         setIsPlaying(true)
         newAudio.volume = volume
-        startProgressInterval()
+        startProgress(true)
         newAudio.onloadedmetadata = () => {
           setDuration(newAudio.duration)
-          updateBuffered(true)
+          updateBuffer(true)
         }
         break
       }

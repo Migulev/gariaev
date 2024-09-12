@@ -17,16 +17,21 @@ const matrices: Matrix[] = [
     audioUrl:
       'https://utfs.io/f/9e57f2cb-1fef-411f-a43c-358cc0cfa25e-y2462f.mp3',
   },
-  // { id: 3, name: 'Harmony Matrix', audioUrl: '/path/to/audio3.mp3' },
+  {
+    id: 3,
+    name: 'Сердце и кровеносная система',
+    audioUrl:
+      'https://utfs.io/f/118510e0-33aa-4250-86ce-2dea226f60ad-2bo15q.mp3',
+  },
   // { id: 4, name: 'Balance Matrix', audioUrl: '/path/to/audio4.mp3' },
   // { id: 5, name: 'Vitality Matrix', audioUrl: '/path/to/audio5.mp3' },
 ]
 
 function App() {
   const [search, setSearch] = useState('')
-  const filteredMatrices = matrices.filter(matrix =>
-    matrix.name.toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredMatrices = matrices
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .filter(matrix => matrix.name.toLowerCase().includes(search.toLowerCase()))
 
   const {
     currentAudio,

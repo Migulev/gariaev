@@ -11,7 +11,7 @@ export function useProgress({
   const [duration, setDuration] = useState(0)
   const progressIntervalRef = useRef<number | null>(null)
 
-  const { buffered, updateBuffered } = useBuffer({ audioRef })
+  const { buffered, updateBuffer } = useBuffer({ audioRef })
 
   const updateProgress = useCallback(
     (isNewAudio: boolean = false) => {
@@ -28,12 +28,15 @@ export function useProgress({
     [audioRef]
   )
 
-  const startProgressInterval = useCallback(() => {
-    updateProgress(true)
-    progressIntervalRef.current = window.setInterval(updateProgress, 1000)
-  }, [updateProgress])
+  const startProgress = useCallback(
+    (isNewAudio: boolean = false) => {
+      updateProgress(isNewAudio)
+      progressIntervalRef.current = window.setInterval(updateProgress, 1000)
+    },
+    [updateProgress]
+  )
 
-  const stopProgressInterval = useCallback(() => {
+  const stopProgress = useCallback(() => {
     if (progressIntervalRef.current) {
       clearInterval(progressIntervalRef.current)
       progressIntervalRef.current = null
@@ -41,18 +44,18 @@ export function useProgress({
   }, [])
 
   useEffect(() => {
-    return () => stopProgressInterval()
-  }, [stopProgressInterval])
+    return () => stopProgress()
+  }, [stopProgress])
 
   const onSeek = useCallback(
     (seekTime: number) => {
       if (audioRef.current) {
         audioRef.current.currentTime = seekTime
         updateProgress()
-        updateBuffered()
+        updateBuffer()
       }
     },
-    [audioRef, updateProgress, updateBuffered]
+    [audioRef, updateProgress, updateBuffer]
   )
 
   return {
@@ -60,9 +63,9 @@ export function useProgress({
     duration,
     currentTime,
     buffered,
-    startProgressInterval,
-    stopProgressInterval,
-    updateBuffered,
+    startProgress,
+    stopProgress,
+    updateBuffer,
     onSeek,
     setDuration,
   }
