@@ -7,49 +7,52 @@ export function useBuffer({
 }) {
   const [buffered, setBuffered] = useState(0)
 
-  const updateBuffered = useCallback(
+  const updateBuffer = useCallback(
     (isNewAudio: boolean = false) => {
-      if (isNewAudio) setBuffered(0)
+      if (isNewAudio) {
+        setBuffered(0)
+      }
       if (audioRef.current) {
-        const bufferedRanges = audioRef.current.buffered
-        const currentTime = audioRef.current.currentTime
-        const duration = audioRef.current.duration
-        if (bufferedRanges.length > 0 && duration > 0) {
-          let bufferedEnd = 0
-          for (let i = 0; i < bufferedRanges.length; i++) {
-            if (
-              bufferedRanges.start(i) <= currentTime &&
-              currentTime <= bufferedRanges.end(i)
-            ) {
-              bufferedEnd = bufferedRanges.end(i)
-              break
+        try {
+          const {
+            buffered: timeRanges,
+            duration,
+            currentTime,
+          } = audioRef.current
+          if (timeRanges.length > 0 && duration > 0) {
+            let bufferedAmount = 0
+            for (let i = 0; i < timeRanges.length; i++) {
+              if (
+                timeRanges.start(i) <= currentTime &&
+                currentTime <= timeRanges.end(i)
+              ) {
+                bufferedAmount = timeRanges.end(i)
+                break
+              }
             }
+            const newBuffered = (bufferedAmount / duration) * 100
+            setBuffered(newBuffered)
           }
-          setBuffered((bufferedEnd / duration) * 100)
-        } else {
-          setBuffered(0)
+        } catch (error) {
+          console.error('Error in updateBuffer:', error)
         }
       }
     },
     [audioRef]
   )
 
-  useEffect(() => {
-    if (audioRef.current) {
-      const audio = audioRef.current
-      const handleProgress = () => updateBuffered()
-      audio.addEventListener('progress', handleProgress)
-      audio.addEventListener('timeupdate', handleProgress)
+  const startBufferUpdate = useCallback(() => {
+    const intervalId = setInterval(updateBuffer, 1000)
+    updateBuffer()
+    return () => clearInterval(intervalId)
+  }, [updateBuffer])
 
-      return () => {
-        audio.removeEventListener('progress', handleProgress)
-        audio.removeEventListener('timeupdate', handleProgress)
-      }
-    }
-  }, [audioRef, updateBuffered])
+  useEffect(() => {
+    return startBufferUpdate()
+  }, [startBufferUpdate])
 
   return {
     buffered,
-    updateBuffered,
+    updateBuffer,
   }
 }

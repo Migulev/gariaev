@@ -1,17 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useBuffer } from './useBuffer'
 
-export function useProgress({
-  audioRef,
-}: {
-  audioRef: React.RefObject<HTMLAudioElement>
-}) {
+export function useProgress() {
   const [progress, setProgress] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const progressIntervalRef = useRef<number | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const { buffered, updateBuffer } = useBuffer({ audioRef })
+
+  const setAudioRef = useCallback((node: HTMLAudioElement | null) => {
+    if (node) {
+      audioRef.current = node
+    }
+  }, [])
 
   const updateProgress = useCallback(
     (isNewAudio: boolean = false) => {
@@ -28,7 +31,7 @@ export function useProgress({
     [audioRef]
   )
 
-  const startProgress = useCallback(
+  const startProgressUpdate = useCallback(
     (isNewAudio: boolean = false) => {
       updateProgress(isNewAudio)
       progressIntervalRef.current = window.setInterval(updateProgress, 1000)
@@ -36,7 +39,7 @@ export function useProgress({
     [updateProgress]
   )
 
-  const stopProgress = useCallback(() => {
+  const stopProgressUpdate = useCallback(() => {
     if (progressIntervalRef.current) {
       clearInterval(progressIntervalRef.current)
       progressIntervalRef.current = null
@@ -44,8 +47,8 @@ export function useProgress({
   }, [])
 
   useEffect(() => {
-    return () => stopProgress()
-  }, [stopProgress])
+    return () => stopProgressUpdate()
+  }, [stopProgressUpdate])
 
   const onSeek = useCallback(
     (seekTime: number) => {
@@ -63,10 +66,11 @@ export function useProgress({
     duration,
     currentTime,
     buffered,
-    startProgress,
-    stopProgress,
+    startProgressUpdate,
+    stopProgressUpdate,
     updateBuffer,
     onSeek,
     setDuration,
+    setAudioRef,
   }
 }

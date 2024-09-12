@@ -17,11 +17,12 @@ export function useAudioPlayer() {
     duration,
     currentTime,
     onSeek,
-    startProgress,
-    stopProgress,
+    startProgressUpdate,
+    stopProgressUpdate,
     updateBuffer,
     setDuration,
-  } = useProgress({ audioRef })
+    setAudioRef,
+  } = useProgress()
 
   const togglePlay = (id: number | string, audioUrl: string) => {
     switch (currentAudio) {
@@ -29,23 +30,24 @@ export function useAudioPlayer() {
         setIsPlaying(prev => !prev)
         if (audioRef.current?.paused) {
           audioRef.current.play()
-          startProgress()
+          startProgressUpdate()
         } else {
           audioRef.current?.pause()
-          stopProgress()
+          stopProgressUpdate()
         }
         break
 
       default: {
         audioRef.current?.pause()
-        stopProgress()
+        stopProgressUpdate()
         const newAudio = new Audio(audioUrl)
         setCurrentAudio(id)
         audioRef.current = newAudio
+        setAudioRef(newAudio)
         audioRef.current.play()
         setIsPlaying(true)
         newAudio.volume = volume
-        startProgress(true)
+        startProgressUpdate(true)
         newAudio.onloadedmetadata = () => {
           setDuration(newAudio.duration)
           updateBuffer(true)
