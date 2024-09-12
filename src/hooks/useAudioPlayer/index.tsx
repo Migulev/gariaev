@@ -41,16 +41,17 @@ export function useAudioPlayer() {
         audioRef.current?.pause()
         stopProgressUpdate()
         const newAudio = new Audio(audioUrl)
-        setCurrentAudio(id)
         audioRef.current = newAudio
-        setAudioRef(newAudio)
-        audioRef.current.play()
-        setIsPlaying(true)
-        newAudio.volume = volume
-        startProgressUpdate(true)
-        newAudio.onloadedmetadata = () => {
-          setDuration(newAudio.duration)
+
+        newAudio.oncanplay = () => {
+          newAudio.play()
+          newAudio.volume = volume
+          setCurrentAudio(id)
+          setIsPlaying(true)
+          startProgressUpdate(true)
           updateBuffer(true)
+          setDuration(newAudio.duration)
+          setAudioRef(newAudio)
         }
         break
       }
