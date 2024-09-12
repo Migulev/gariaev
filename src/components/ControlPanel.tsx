@@ -12,13 +12,13 @@ type ControlPanelProps = {
   progress: number
   volume: number
   isMuted: boolean
+  currentTime: number
+  duration: number
+  buffered: number
   onTogglePlay: () => void
   toggleMute: () => void
   onVolumeChange: (newVolume: number) => void
-  currentTime: number
-  duration: number
   onSeek: (time: number) => void
-  buffered: number
 }
 
 export function ControlPanel({
@@ -27,13 +27,13 @@ export function ControlPanel({
   progress,
   volume,
   isMuted,
+  currentTime,
+  duration,
+  buffered,
   onTogglePlay,
   toggleMute,
   onVolumeChange,
-  currentTime,
-  duration,
   onSeek,
-  buffered,
 }: ControlPanelProps) {
   const [isReverseTime, setIsReverseTime] = usePersist('isReverseTime', false)
   const toggleTimeDisplay = () => {
