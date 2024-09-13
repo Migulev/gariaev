@@ -9,9 +9,11 @@ export function TabsGroup({
   playing,
   togglePlay,
   className,
+  isPlaying,
 }: {
   matrices: Matrix[]
   playing: number | string | null
+  isPlaying: boolean
   togglePlay: (id: number, audioUrl: string) => void
   className?: string
 }) {
@@ -29,7 +31,7 @@ export function TabsGroup({
           <MatrixCard
             key={matrix.id}
             matrix={matrix}
-            isPlaying={playing === matrix.id}
+            isPlaying={playing === matrix.id && isPlaying}
             isFavorite={favorites.includes(matrix.id)}
             onTogglePlay={() => togglePlay(matrix.id, matrix.audioUrl)}
             onToggleFavorite={() => toggleFavorite(matrix.id)}
@@ -43,7 +45,7 @@ export function TabsGroup({
             <MatrixCard
               key={matrix.id}
               matrix={matrix}
-              isPlaying={playing === matrix.id}
+              isPlaying={playing === matrix.id && isPlaying}
               isFavorite={true}
               onTogglePlay={() => togglePlay(matrix.id, matrix.audioUrl)}
               onToggleFavorite={() => toggleFavorite(matrix.id)}

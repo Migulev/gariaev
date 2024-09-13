@@ -83,6 +83,7 @@ function App() {
       <TabsGroup
         matrices={filteredMatrices}
         playing={currentAudio}
+        isPlaying={isPlaying}
         togglePlay={togglePlay}
         className='mt-4'
       />
