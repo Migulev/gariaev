@@ -20,7 +20,6 @@ export function TabsGroup({
   const { favorites, toggleFavorite } = useFavorites()
 
   return (
-    // !todo: fix margin top change
     <Tabs defaultValue="all" className={cn('w-full', className)}>
       <TabsList>
         <TabsTrigger value="all">
@@ -43,18 +42,25 @@ export function TabsGroup({
         ))}
       </TabsContent>
       <TabsContent value="favorites">
-        {matrices
-          .filter((matrix) => favorites.includes(matrix.id))
-          .map((matrix) => (
-            <MatrixCard
-              key={matrix.id}
-              matrix={matrix}
-              isPlaying={playing === matrix.id && isPlaying}
-              isFavorite={true}
-              onTogglePlay={() => togglePlay(matrix.id, matrix.audioUrl)}
-              onToggleFavorite={() => toggleFavorite(matrix.id)}
-            />
-          ))}
+        {favorites
+          .map((id) => {
+            const foundMatrix = matrices.find((matrix) => matrix.id === id)
+            return foundMatrix
+          })
+          .map((matrix) => {
+            return (
+              matrix && (
+                <MatrixCard
+                  key={matrix.id}
+                  matrix={matrix}
+                  isPlaying={playing === matrix.id && isPlaying}
+                  isFavorite={true}
+                  onTogglePlay={() => togglePlay(matrix.id, matrix.audioUrl)}
+                  onToggleFavorite={() => toggleFavorite(matrix.id)}
+                />
+              )
+            )
+          })}
       </TabsContent>
     </Tabs>
   )
