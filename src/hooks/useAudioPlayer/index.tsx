@@ -26,15 +26,18 @@ export function useAudioPlayer() {
 
   const togglePlay = (id: number | string, audioUrl: string) => {
     if (currentAudio === id) {
-      setIsPlaying(prev => !prev)
       if (audioRef.current?.paused) {
-        audioRef.current.play().then(() => startProgressUpdate())
+        audioRef.current.play().then(() => {
+          startProgressUpdate()
+          setIsPlaying(true)
+        })
       } else {
         audioRef.current?.pause()
         stopProgressUpdate()
+        setIsPlaying(false)
       }
     } else {
-      // Stop the current audio if it's playing
+      setIsPlaying(false)
       if (audioRef.current) {
         audioRef.current.pause()
         audioRef.current.currentTime = 0
@@ -45,25 +48,32 @@ export function useAudioPlayer() {
       const newAudio = new Audio(audioUrl)
       audioRef.current = newAudio
 
-      setCurrentAudio(id)
-      setIsPlaying(true)
-      startProgressUpdate(true)
-      updateBuffer(true)
-      setAudioRef(newAudio)
+      newAudio.addEventListener(
+        'canplay',
+        () => {
+          newAudio
+            .play()
+            .then(() => {
+              setCurrentAudio(id)
+              setIsPlaying(true)
+              setAudioRef(newAudio)
+              startProgressUpdate()
+              updateBuffer()
+            })
+            .catch(error => console.error('Error playing audio:', error))
+        },
+        { once: true }
+      )
 
-      newAudio.addEventListener('loadedmetadata', () => {
-        setDuration(newAudio.duration)
-      })
+      newAudio.addEventListener(
+        'loadedmetadata',
+        () => {
+          setDuration(newAudio.duration)
+        },
+        { once: true }
+      )
 
-      newAudio
-        .play()
-        .then(() => {
-          newAudio.volume = volume
-        })
-        .catch(error => {
-          console.error('Error playing audio:', error)
-          setIsPlaying(false)
-        })
+      newAudio.load() // It resets the audio element to its initial state.
     }
   }
 

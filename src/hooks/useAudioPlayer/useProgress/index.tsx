@@ -16,28 +16,21 @@ export function useProgress() {
     }
   }, [])
 
-  const updateProgress = useCallback(
-    (isNewAudio: boolean = false) => {
-      if (audioRef.current) {
-        const currentTime = audioRef.current.currentTime
-        const duration = audioRef.current.duration
-        setCurrentTime(currentTime)
-        setDuration(duration)
+  const updateProgress = useCallback(() => {
+    if (audioRef.current) {
+      const currentTime = audioRef.current.currentTime
+      const duration = audioRef.current.duration
+      setCurrentTime(currentTime)
+      setDuration(duration)
 
-        if (isNewAudio) setProgress(0)
-        else if (duration > 0) setProgress((currentTime / duration) * 100)
-      }
-    },
-    [audioRef]
-  )
+      if (duration > 0) setProgress((currentTime / duration) * 100)
+    }
+  }, [audioRef])
 
-  const startProgressUpdate = useCallback(
-    (isNewAudio: boolean = false) => {
-      updateProgress(isNewAudio)
-      progressIntervalRef.current = window.setInterval(updateProgress, 1000)
-    },
-    [updateProgress]
-  )
+  const startProgressUpdate = useCallback(() => {
+    updateProgress()
+    progressIntervalRef.current = window.setInterval(updateProgress, 1000)
+  }, [updateProgress])
 
   const stopProgressUpdate = useCallback(() => {
     if (progressIntervalRef.current) {
@@ -53,7 +46,9 @@ export function useProgress() {
   const onSeek = useCallback(
     (seekTime: number) => {
       if (audioRef.current) {
+        audioRef.current.pause()
         audioRef.current.currentTime = seekTime
+        audioRef.current.play()
         updateProgress()
         updateBuffer()
       }
