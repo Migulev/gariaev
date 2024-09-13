@@ -53,8 +53,17 @@ function App() {
       <h1 className='text-3xl font-bold mb-6'>Матрицы Гаряева</h1>
 
       <ControlPanel
+        currentAudio={matrices.find(m => m.id === currentAudio)}
         isPlaying={isPlaying}
         progress={progress}
+        volume={volume}
+        isMuted={isMuted}
+        duration={duration}
+        buffered={buffered}
+        currentTime={currentTime}
+        toggleMute={toggleMute}
+        onVolumeChange={onVolumeChange}
+        onSeek={onSeek}
         onTogglePlay={() =>
           currentAudio &&
           togglePlay(
@@ -62,15 +71,6 @@ function App() {
             matrices.find(m => m.id === currentAudio)?.audioUrl || ''
           )
         }
-        currentAudio={matrices.find(m => m.id === currentAudio)}
-        isMuted={isMuted}
-        toggleMute={toggleMute}
-        volume={volume}
-        onVolumeChange={onVolumeChange}
-        currentTime={currentTime}
-        duration={duration}
-        onSeek={onSeek}
-        buffered={buffered}
       />
 
       <Input
