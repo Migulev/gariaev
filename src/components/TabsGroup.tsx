@@ -21,17 +21,17 @@ export function TabsGroup({
 
   return (
     // !todo: fix margin top change
-    <Tabs defaultValue='all' className={cn('w-full', className)}>
+    <Tabs defaultValue="all" className={cn('w-full', className)}>
       <TabsList>
-        <TabsTrigger value='all'>
-          <span className='text-sm font-medium'>Все</span>
+        <TabsTrigger value="all">
+          <span className="text-sm font-medium">Все</span>
         </TabsTrigger>
-        <TabsTrigger value='favorites'>
-          <span className='text-sm font-medium'>Избранные</span>
+        <TabsTrigger value="favorites">
+          <span className="text-sm font-medium">Избранные</span>
         </TabsTrigger>
       </TabsList>
-      <TabsContent value='all'>
-        {matrices.map(matrix => (
+      <TabsContent value="all">
+        {matrices.map((matrix) => (
           <MatrixCard
             key={matrix.id}
             matrix={matrix}
@@ -42,10 +42,10 @@ export function TabsGroup({
           />
         ))}
       </TabsContent>
-      <TabsContent value='favorites'>
+      <TabsContent value="favorites">
         {matrices
-          .filter(matrix => favorites.includes(matrix.id))
-          .map(matrix => (
+          .filter((matrix) => favorites.includes(matrix.id))
+          .map((matrix) => (
             <MatrixCard
               key={matrix.id}
               matrix={matrix}

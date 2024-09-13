@@ -71,7 +71,9 @@ function App() {
   const [search, setSearch] = useState('')
   const filteredMatrices = matrices
     .sort((a, b) => a.name.localeCompare(b.name))
-    .filter(matrix => matrix.name.toLowerCase().includes(search.toLowerCase()))
+    .filter((matrix) =>
+      matrix.name.toLowerCase().includes(search.toLowerCase()),
+    )
 
   const {
     currentAudio,
@@ -89,11 +91,11 @@ function App() {
   } = useAudioPlayer()
 
   return (
-    <div className='container mx-auto p-4 relative'>
-      <h1 className='text-3xl font-bold mb-6'>Матрицы Гаряева</h1>
+    <div className="container relative mx-auto p-4">
+      <h1 className="mb-6 text-3xl font-bold">Матрицы Гаряева</h1>
 
       <ControlPanel
-        currentAudio={matrices.find(m => m.id === currentAudio)}
+        currentAudio={matrices.find((m) => m.id === currentAudio)}
         isPlaying={isPlaying}
         progress={progress}
         volume={volume}
@@ -108,24 +110,24 @@ function App() {
           currentAudio &&
           togglePlay(
             currentAudio,
-            matrices.find(m => m.id === currentAudio)?.audioUrl || ''
+            matrices.find((m) => m.id === currentAudio)?.audioUrl || '',
           )
         }
       />
 
       <Input
-        type='text'
-        placeholder='поиск матрицы...'
+        type="text"
+        placeholder="поиск матрицы..."
         value={search}
-        onChange={e => setSearch(e.target.value)}
-        className='max-w-sm'
+        onChange={(e) => setSearch(e.target.value)}
+        className="max-w-sm"
       />
       <TabsGroup
         matrices={filteredMatrices}
         playing={currentAudio}
         isPlaying={isPlaying}
         togglePlay={togglePlay}
-        className='mt-4'
+        className="mt-4"
       />
     </div>
   )

@@ -58,7 +58,7 @@ export function useAudioPlayer() {
           startBufferUpdate()
         })
       },
-      { once: true }
+      { once: true },
     )
 
     newAudio.addEventListener(
@@ -66,7 +66,7 @@ export function useAudioPlayer() {
       () => {
         setDuration(newAudio.duration)
       },
-      { once: true }
+      { once: true },
     )
 
     newAudio.load() // It resets the audio element to its initial state.

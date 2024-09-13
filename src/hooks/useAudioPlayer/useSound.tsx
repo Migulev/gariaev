@@ -15,7 +15,7 @@ export function useSound({
 
   const toggleMute = useCallback(() => {
     if (volume > 0) {
-      setIsMuted(prev => !prev)
+      setIsMuted((prev) => !prev)
       if (audioRef.current) {
         audioRef.current.muted = !isMuted
       }

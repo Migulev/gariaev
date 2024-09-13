@@ -18,19 +18,19 @@ export function MatrixCard({
   onToggleFavorite,
 }: MatrixCardProps) {
   return (
-    <Card className='mb-4'>
-      <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-        <CardTitle className='text-sm font-medium'>{matrix.name}</CardTitle>
-        <Button variant='ghost' size='icon' onClick={onToggleFavorite}>
+    <Card className="mb-4">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{matrix.name}</CardTitle>
+        <Button variant="ghost" size="icon" onClick={onToggleFavorite}>
           <Heart className={isFavorite ? 'fill-red-500 text-red-500' : ''} />
         </Button>
       </CardHeader>
       <CardContent>
-        <Button onClick={onTogglePlay} className='w-full mb-2'>
+        <Button onClick={onTogglePlay} className="mb-2 w-full">
           {isPlaying ? (
-            <Pause className='mr-2 h-4 w-4' />
+            <Pause className="mr-2 h-4 w-4" />
           ) : (
-            <Play className='mr-2 h-4 w-4' />
+            <Play className="mr-2 h-4 w-4" />
           )}
           {isPlaying ? 'Pause' : 'Play'}
         </Button>
