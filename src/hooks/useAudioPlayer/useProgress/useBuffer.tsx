@@ -32,8 +32,8 @@ export function useBuffer({
   }, [audioRef])
 
   const startBufferUpdate = useCallback(() => {
-    const intervalId = setInterval(updateBuffer, 1000)
     updateBuffer()
+    const intervalId = setInterval(updateBuffer, 1000)
     return () => clearInterval(intervalId)
   }, [updateBuffer])
 
@@ -43,6 +43,6 @@ export function useBuffer({
 
   return {
     buffered,
-    updateBuffer,
+    startBufferUpdate,
   }
 }

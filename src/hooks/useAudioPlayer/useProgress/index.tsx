@@ -8,7 +8,7 @@ export function useProgress() {
   const progressIntervalRef = useRef<number | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  const { buffered, updateBuffer } = useBuffer({ audioRef })
+  const { buffered, startBufferUpdate } = useBuffer({ audioRef })
 
   const setAudioRef = useCallback((node: HTMLAudioElement | null) => {
     if (node) {
@@ -48,12 +48,11 @@ export function useProgress() {
       if (audioRef.current) {
         audioRef.current.pause()
         audioRef.current.currentTime = seekTime
-        audioRef.current.play()
         updateProgress()
-        updateBuffer()
+        audioRef.current.play()
       }
     },
-    [audioRef, updateProgress, updateBuffer]
+    [audioRef, updateProgress]
   )
 
   return {
@@ -61,9 +60,9 @@ export function useProgress() {
     duration,
     currentTime,
     buffered,
+    startBufferUpdate,
     startProgressUpdate,
     stopProgressUpdate,
-    updateBuffer,
     onSeek,
     setDuration,
     setAudioRef,
