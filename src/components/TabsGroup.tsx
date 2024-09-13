@@ -23,8 +23,12 @@ export function TabsGroup({
     // !todo: fix margin top change
     <Tabs defaultValue='all' className={cn('w-full', className)}>
       <TabsList>
-        <TabsTrigger value='all'>All Matrices</TabsTrigger>
-        <TabsTrigger value='favorites'>Favorites</TabsTrigger>
+        <TabsTrigger value='all'>
+          <span className='text-sm font-medium'>Все</span>
+        </TabsTrigger>
+        <TabsTrigger value='favorites'>
+          <span className='text-sm font-medium'>Избранные</span>
+        </TabsTrigger>
       </TabsList>
       <TabsContent value='all'>
         {matrices.map(matrix => (
