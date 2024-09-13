@@ -25,36 +25,45 @@ export function useAudioPlayer() {
   } = useProgress()
 
   const togglePlay = (id: number | string, audioUrl: string) => {
-    switch (currentAudio) {
-      case id:
-        setIsPlaying(prev => !prev)
-        if (audioRef.current?.paused) {
-          audioRef.current.play()
-          startProgressUpdate()
-        } else {
-          audioRef.current?.pause()
-          stopProgressUpdate()
-        }
-        break
-
-      default: {
+    if (currentAudio === id) {
+      setIsPlaying(prev => !prev)
+      if (audioRef.current?.paused) {
+        audioRef.current.play().then(() => startProgressUpdate())
+      } else {
         audioRef.current?.pause()
         stopProgressUpdate()
-        const newAudio = new Audio(audioUrl)
-        audioRef.current = newAudio
-
-        newAudio.oncanplay = () => {
-          newAudio.play()
-          newAudio.volume = volume
-          setCurrentAudio(id)
-          setIsPlaying(true)
-          startProgressUpdate(true)
-          updateBuffer(true)
-          setDuration(newAudio.duration)
-          setAudioRef(newAudio)
-        }
-        break
       }
+    } else {
+      // Stop the current audio if it's playing
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+        stopProgressUpdate()
+      }
+
+      // Create and play the new audio
+      const newAudio = new Audio(audioUrl)
+      audioRef.current = newAudio
+
+      setCurrentAudio(id)
+      setIsPlaying(true)
+      startProgressUpdate(true)
+      updateBuffer(true)
+      setAudioRef(newAudio)
+
+      newAudio.addEventListener('loadedmetadata', () => {
+        setDuration(newAudio.duration)
+      })
+
+      newAudio
+        .play()
+        .then(() => {
+          newAudio.volume = volume
+        })
+        .catch(error => {
+          console.error('Error playing audio:', error)
+          setIsPlaying(false)
+        })
     }
   }
 
