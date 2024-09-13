@@ -2,9 +2,9 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
 import { usePersist } from '@/hooks/usePersist'
+import { useProgressBarInteraction } from '@/hooks/useProgressBarInteraction'
 import { formatTime } from '@/lib/utils'
 import { Clock, Pause, Play, Volume2, VolumeX } from 'lucide-react'
-import { useRef } from 'react'
 
 type ControlPanelProps = {
   isPlaying: boolean
@@ -52,16 +52,8 @@ export function ControlPanel({
   const totalDuration =
     !isNaN(duration) && isFinite(duration) ? formatTime(duration) : '00:00'
 
-  const progressBarRef = useRef<HTMLDivElement>(null)
-  const handleProgressBarClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (progressBarRef.current) {
-      const rect = progressBarRef.current.getBoundingClientRect()
-      const clickPosition = event.clientX - rect.left
-      const percentClicked = clickPosition / rect.width
-      const newTime = percentClicked * duration
-      onSeek(newTime)
-    }
-  }
+  const { progressBarRef, handleMouseDown, handleTouchStart } =
+    useProgressBarInteraction({ duration, onSeek })
 
   return (
     <Card className='mb-6'>
@@ -104,7 +96,8 @@ export function ControlPanel({
           <div
             ref={progressBarRef}
             className='w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mt-2 cursor-pointer relative'
-            onClick={handleProgressBarClick}>
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}>
             {/* Buffered progress bar */}
             <div
               className='absolute bg-gray-400 h-2.5 rounded-full'
