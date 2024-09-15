@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Matrix } from '@/types'
 import { Heart, Play, Pause } from 'lucide-react'
 
 type MatrixCardProps = {
-  matrix: { id: number; name: string; audioUrl: string }
+  matrix: Matrix
   isPlaying: boolean
   isFavorite: boolean
   onTogglePlay: () => void

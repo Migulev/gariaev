@@ -1,8 +1,8 @@
 import { useFavorites } from '@/hooks/useFavorites'
+import { cn } from '@/lib/utils'
+import { type Matrix } from '@/types'
 import { MatrixCard } from './MatrixCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
-import { type Matrix } from '@/types'
-import { cn } from '@/lib/utils'
 
 export function TabsGroup({
   matrices,
@@ -14,7 +14,7 @@ export function TabsGroup({
   matrices: Matrix[]
   playing: number | string | null
   isPlaying: boolean
-  togglePlay: (id: number, audioUrl: string) => void
+  togglePlay: (id: Matrix['id'], audioUrl: Matrix['audioUrl']) => void
   className?: string
 }) {
   const { favorites, toggleFavorite } = useFavorites()
@@ -42,25 +42,20 @@ export function TabsGroup({
         ))}
       </TabsContent>
       <TabsContent value="favorites">
-        {favorites
-          .map((id) => {
-            const foundMatrix = matrices.find((matrix) => matrix.id === id)
-            return foundMatrix
-          })
-          .map((matrix) => {
-            return (
-              matrix && (
-                <MatrixCard
-                  key={matrix.id}
-                  matrix={matrix}
-                  isPlaying={playing === matrix.id && isPlaying}
-                  isFavorite={true}
-                  onTogglePlay={() => togglePlay(matrix.id, matrix.audioUrl)}
-                  onToggleFavorite={() => toggleFavorite(matrix.id)}
-                />
-              )
-            )
-          })}
+        {favorites.map((id) => {
+          const matrix = matrices.find((m) => m.id === id)
+          if (!matrix) return null
+          return (
+            <MatrixCard
+              key={matrix.id}
+              matrix={matrix}
+              isPlaying={playing === matrix.id && isPlaying}
+              isFavorite={true}
+              onTogglePlay={() => togglePlay(matrix.id, matrix.audioUrl)}
+              onToggleFavorite={() => toggleFavorite(matrix.id)}
+            />
+          )
+        })}
       </TabsContent>
     </Tabs>
   )

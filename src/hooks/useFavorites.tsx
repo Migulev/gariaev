@@ -1,23 +1,26 @@
+import { Matrix } from '@/types'
 import { useState, useEffect } from 'react'
 
 export function useFavorites() {
-  const [favorites, setFavorites] = useState<number[]>(() => {
-    const stored = localStorage.getItem('favorites')
-    return stored ? JSON.parse(stored) : []
-  })
+  const [favorites, setFavorites] = useState<Matrix['id'][]>([])
 
   useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(favorites))
-  }, [favorites])
+    const storedFavorites = localStorage.getItem('favorites')
+    if (storedFavorites) {
+      setFavorites(JSON.parse(storedFavorites))
+    }
+  }, [])
 
-  const toggleFavorite = (id: number) => {
-    setFavorites((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((favId) => favId !== id)
-      } else {
-        return [...prev, id]
-      }
-    })
+  const saveFavorites = (newFavorites: Matrix['id'][]) => {
+    localStorage.setItem('favorites', JSON.stringify(newFavorites))
+    setFavorites(newFavorites)
+  }
+
+  const toggleFavorite = (id: Matrix['id']) => {
+    const newFavorites = favorites.includes(id)
+      ? favorites.filter((fav) => fav !== id)
+      : [...favorites, id]
+    saveFavorites(newFavorites)
   }
 
   return { favorites, toggleFavorite }
