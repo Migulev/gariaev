@@ -23,48 +23,6 @@ const matrices: Matrix[] = [
     audioUrl:
       'https://utfs.io/f/118510e0-33aa-4250-86ce-2dea226f60ad-2bo15q.mp3',
   },
-  {
-    id: 4,
-    name: 'Сердце и кровеносная система',
-    audioUrl:
-      'https://utfs.io/f/118510e0-33aa-4250-86ce-2dea226f60ad-2bo15q.mp3',
-  },
-  {
-    id: 5,
-    name: 'Сердце и кровеносная система',
-    audioUrl:
-      'https://utfs.io/f/118510e0-33aa-4250-86ce-2dea226f60ad-2bo15q.mp3',
-  },
-  {
-    id: 6,
-    name: 'Сердце и кровеносная система',
-    audioUrl:
-      'https://utfs.io/f/118510e0-33aa-4250-86ce-2dea226f60ad-2bo15q.mp3',
-  },
-  {
-    id: 7,
-    name: 'Сердце и кровеносная система',
-    audioUrl:
-      'https://utfs.io/f/118510e0-33aa-4250-86ce-2dea226f60ad-2bo15q.mp3',
-  },
-  {
-    id: 8,
-    name: 'Сердце и кровеносная система',
-    audioUrl:
-      'https://utfs.io/f/118510e0-33aa-4250-86ce-2dea226f60ad-2bo15q.mp3',
-  },
-  {
-    id: 9,
-    name: 'Сердце и кровеносная система',
-    audioUrl:
-      'https://utfs.io/f/118510e0-33aa-4250-86ce-2dea226f60ad-2bo15q.mp3',
-  },
-  {
-    id: 10,
-    name: 'Сердце и кровеносная система',
-    audioUrl:
-      'https://utfs.io/f/118510e0-33aa-4250-86ce-2dea226f60ad-2bo15q.mp3',
-  },
 ]
 
 function App() {
