@@ -21,10 +21,26 @@ export function SortableMatrix({ id, children }: SortableItemProps) {
     transform: CSS.Transform.toString(transform),
     transition,
     zIndex: isDragging ? 1000 : 'auto',
+    position: 'relative' as const,
+    touchAction: 'none',
   }
-
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div ref={setNodeRef} style={style} {...attributes}>
+      <div
+        {...listeners}
+        className="absolute h-full w-6 cursor-grab rounded-l-xl hover:bg-muted"
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        ⋮⋮
+      </div>
       {children}
     </div>
   )

@@ -19,7 +19,7 @@ export function MatrixCard({
   onToggleFavorite,
 }: MatrixCardProps) {
   return (
-    <Card className="mb-4">
+    <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{matrix.name}</CardTitle>
         <Button variant="ghost" size="icon" onClick={onToggleFavorite}>
