@@ -23,5 +23,5 @@ export function useFavorites() {
     saveFavorites(newFavorites)
   }
 
-  return { favorites, toggleFavorite }
+  return { favorites, toggleFavorite, setFavorites: saveFavorites }
 }
