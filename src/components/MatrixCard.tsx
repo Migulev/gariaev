@@ -21,7 +21,7 @@ export function MatrixCard({
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{matrix.name}</CardTitle>
+        <CardTitle className="text-sm font-medium">{matrix.title}</CardTitle>
         <Button variant="ghost" size="icon" onClick={onToggleFavorite}>
           <Heart className={isFavorite ? 'fill-red-500 text-red-500' : ''} />
         </Button>

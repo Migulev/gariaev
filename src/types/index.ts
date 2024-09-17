@@ -1,5 +1,5 @@
 export type Matrix = {
   id: number
-  name: string
+  title: string
   audioUrl: string
 }

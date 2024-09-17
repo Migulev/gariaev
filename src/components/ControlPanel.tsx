@@ -8,7 +8,7 @@ import { Clock, Pause, Play, Volume2, VolumeX } from 'lucide-react'
 
 type ControlPanelProps = {
   isPlaying: boolean
-  currentAudio: { name: string } | undefined
+  currentAudio: { title: string } | undefined
   progress: number
   volume: number
   isMuted: boolean
@@ -92,7 +92,7 @@ export function ControlPanel({
               <Clock className="h-4 w-4" />
             </Button>
           </div>
-          <p className="text-lg font-bold">{currentAudio?.name}</p>
+          <p className="text-lg font-bold">{currentAudio?.title}</p>
           <div
             ref={progressBarRef}
             className="relative mt-2 h-2.5 w-full cursor-pointer rounded-full bg-gray-200 dark:bg-gray-700"
