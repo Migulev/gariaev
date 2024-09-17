@@ -48,7 +48,7 @@ function App() {
 
   return (
     <div className="no-scrollbar container relative mx-auto h-screen overflow-auto p-4">
-      <h1 className="mb-6 text-3xl font-bold">Матрицы Гаряева</h1>
+      <h1 className="mb-6 text-3xl font-bold">Матрицы Гаряева TEST</h1>
       <ControlPanel
         currentAudio={matrices.find((m) => m.id === currentAudio)}
         isPlaying={isPlaying}
