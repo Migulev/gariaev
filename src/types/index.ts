@@ -3,3 +3,5 @@ export type Matrix = {
   title: string
   audioUrl: string
 }
+
+export type Tab = 'all' | 'favorites'

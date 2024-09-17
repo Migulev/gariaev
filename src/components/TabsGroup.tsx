@@ -1,6 +1,7 @@
 import { useFavorites } from '@/hooks/useFavorites'
+import { usePersist } from '@/hooks/usePersist'
 import { cn } from '@/lib/utils'
-import { type Matrix } from '@/types'
+import { Tab, type Matrix } from '@/types'
 import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
 import { MatrixCard } from './MatrixCard'
@@ -21,6 +22,11 @@ export function TabsGroup({
   className?: string
 }) {
   const { favorites, toggleFavorite, setFavorites } = useFavorites()
+  const [activeTab, setActiveTab] = usePersist<Tab>('activeTab', 'all')
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value as Tab)
+  }
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
@@ -34,7 +40,11 @@ export function TabsGroup({
   }
 
   return (
-    <Tabs defaultValue="all" className={cn('w-full', className)}>
+    <Tabs
+      value={matrices.length > 0 ? activeTab : 'all'}
+      onValueChange={handleTabChange}
+      className={cn('w-full', className)}
+    >
       <TabsList>
         <TabsTrigger value="all">
           <span className="text-sm font-medium">Все</span>
