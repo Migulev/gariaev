@@ -1,4 +1,4 @@
-import { indexDB } from '@/lib/IndexDb'
+import { indexDB } from '@/lib/indexDb'
 import { Matrix } from '@/types'
 import { useState } from 'react'
 

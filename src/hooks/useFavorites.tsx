@@ -1,4 +1,6 @@
 import { Matrix } from '@/types'
+import { DragEndEvent } from '@dnd-kit/core'
+import { arrayMove } from '@dnd-kit/sortable'
 import { useState, useEffect } from 'react'
 
 export function useFavorites() {
@@ -23,5 +25,19 @@ export function useFavorites() {
     saveFavorites(newFavorites)
   }
 
-  return { favorites, toggleFavorite, setFavorites: saveFavorites }
+  const handleDragEndFavorites = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (active.id !== over?.id) {
+      const oldIndex = favorites.indexOf(active.id as Matrix['id'])
+      const newIndex = favorites.indexOf(over?.id as Matrix['id'])
+      setFavorites(arrayMove(favorites, oldIndex, newIndex))
+    }
+  }
+
+  return {
+    favorites,
+    toggleFavorite,
+    handleDragEndFavorites,
+  }
 }

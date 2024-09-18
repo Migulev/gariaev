@@ -1,18 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ControlPanel } from './components/ControlPanel'
 import { TabsGroup } from './components/TabsGroup'
 import { Input } from './components/ui/input'
 import { useAudioPlayer } from './hooks/useAudioPlayer'
-import { useMatrices } from './hooks/useMatrices'
+import { useMatrixStore } from './store/matrix.store'
 
 function App() {
-  const { matrices } = useMatrices()
+  const { matrices, fetchMatrices } = useMatrixStore()
   const [search, setSearch] = useState('')
-  const filteredMatrices = matrices
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .filter((matrix) =>
-      matrix.title.toLowerCase().includes(search.toLowerCase()),
-    )
+
+  useEffect(() => {
+    fetchMatrices()
+  }, [fetchMatrices])
 
   const {
     currentAudio,
@@ -61,7 +60,6 @@ function App() {
         className="max-w-sm"
       />
       <TabsGroup
-        matrices={filteredMatrices}
         playing={currentAudio}
         isPlaying={isPlaying}
         togglePlay={togglePlay}

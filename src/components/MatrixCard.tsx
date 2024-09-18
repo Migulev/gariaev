@@ -1,18 +1,20 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useHandleDownload } from '@/hooks/useHandleDownload'
 import { cn } from '@/lib/utils'
 import { Matrix } from '@/types'
 import { Download, Heart, Pause, Play, Trash2 } from 'lucide-react'
 import { Progress } from './ui/progress'
+import { useMatrixStore } from '@/store/matrix.store'
 
 type MatrixCardProps = {
   matrix: Matrix
   isPlaying: boolean
   isFavorite: boolean
+
   onTogglePlay: () => void
   onToggleFavorite: () => void
   // onDeleteDownload: () => void
+  onDownload: () => void
 }
 
 export function MatrixCard({
@@ -21,14 +23,17 @@ export function MatrixCard({
   isFavorite,
   onTogglePlay,
   onToggleFavorite,
-  // onDeleteDownload,
+  onDownload,
 }: MatrixCardProps) {
-  const { isDownloading, downloadProgress, handleDownload } =
-    useHandleDownload()
-
   const onDeleteDownload = () => {
     console.log('delete download')
   }
+
+  const isDownloading = useMatrixStore((state) => state.isDownloading)
+  const downloadProgress = useMatrixStore((state) => state.downloadProgress)
+  const matrixIsDownloading = useMatrixStore(
+    (state) => state.matrixIsDownloading,
+  )
 
   return (
     <Card className="w-full">
@@ -46,7 +51,7 @@ export function MatrixCard({
             </Button>
           ) : (
             <Button
-              onClick={() => handleDownload(matrix)}
+              onClick={onDownload}
               variant="ghost"
               size="icon"
               className={cn('flex items-center justify-center', {
@@ -63,7 +68,7 @@ export function MatrixCard({
         </div>
       </CardHeader>
       <CardContent>
-        {isDownloading && (
+        {matrixIsDownloading?.id === matrix.id && (
           <Progress value={downloadProgress} className="mb-2" />
         )}
         <Button onClick={onTogglePlay} className="mb-2 w-full">
