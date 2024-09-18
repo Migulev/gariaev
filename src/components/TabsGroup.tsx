@@ -18,12 +18,11 @@ export function TabsGroup({
   matrices: Matrix[]
   playing: number | string | null
   isPlaying: boolean
-  togglePlay: (id: Matrix['id'], audioUrl: Matrix['audioUrl']) => void
+  togglePlay: (id: Matrix['id'], audioSource: Matrix['audioSource']) => void
   className?: string
 }) {
   const { favorites, toggleFavorite, setFavorites } = useFavorites()
   const [activeTab, setActiveTab] = usePersist<Tab>('activeTab', 'all')
-
   const handleTabChange = (value: string) => {
     setActiveTab(value as Tab)
   }
@@ -34,7 +33,6 @@ export function TabsGroup({
     if (active.id !== over?.id) {
       const oldIndex = favorites.indexOf(active.id as number)
       const newIndex = favorites.indexOf(over?.id as number)
-
       setFavorites(arrayMove(favorites, oldIndex, newIndex))
     }
   }
@@ -60,7 +58,7 @@ export function TabsGroup({
             matrix={matrix}
             isPlaying={playing === matrix.id && isPlaying}
             isFavorite={favorites.includes(matrix.id)}
-            onTogglePlay={() => togglePlay(matrix.id, matrix.audioUrl)}
+            onTogglePlay={() => togglePlay(matrix.id, matrix.audioSource)}
             onToggleFavorite={() => toggleFavorite(matrix.id)}
           />
         ))}
@@ -80,7 +78,9 @@ export function TabsGroup({
                     matrix={matrix}
                     isPlaying={playing === matrix.id && isPlaying}
                     isFavorite={true}
-                    onTogglePlay={() => togglePlay(matrix.id, matrix.audioUrl)}
+                    onTogglePlay={() =>
+                      togglePlay(matrix.id, matrix.audioSource)
+                    }
                     onToggleFavorite={() => toggleFavorite(matrix.id)}
                   />
                 </SortableMatrix>

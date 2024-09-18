@@ -25,7 +25,7 @@ export function SortableMatrix({ id, children }: SortableItemProps) {
     touchAction: 'none',
   }
   return (
-    <div ref={setNodeRef} style={style} {...attributes}>
+    <div ref={setNodeRef} style={style} {...attributes} className="cursor-auto">
       <div
         {...listeners}
         className="absolute h-full w-6 cursor-grab rounded-l-xl hover:bg-muted"

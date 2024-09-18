@@ -37,12 +37,22 @@ export function useAudioPlayer() {
     }
   }
 
-  const handlePlayNewAudio = (id: number | string, audioUrl: string) => {
+  const handlePlayNewAudio = (
+    id: number | string,
+    audioSource: string | Blob,
+  ) => {
     setIsPlaying(false)
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current.currentTime = 0
       stopProgressUpdate()
+    }
+
+    let audioUrl: string
+    if (audioSource instanceof Blob) {
+      audioUrl = URL.createObjectURL(audioSource)
+    } else {
+      audioUrl = audioSource
     }
 
     const newAudio = new Audio(audioUrl)
@@ -81,15 +91,21 @@ export function useAudioPlayer() {
         audio.pause()
         audio.src = ''
         audio.load()
+        if (audio.src.startsWith('blob:')) {
+          URL.revokeObjectURL(audio.src)
+        }
       }
     }
   }, [currentAudio, setAudioRef])
 
-  const togglePlay = (id: number | string, audioUrl: string) => {
+  const togglePlay = async (
+    id: number | string,
+    audioSource: string | Blob,
+  ) => {
     if (currentAudio === id) {
       handlePlaySameAudio()
     } else {
-      handlePlayNewAudio(id, audioUrl)
+      handlePlayNewAudio(id, audioSource)
     }
   }
 

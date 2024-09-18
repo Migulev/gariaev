@@ -1,29 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ControlPanel } from './components/ControlPanel'
+import { TabsGroup } from './components/TabsGroup'
 import { Input } from './components/ui/input'
 import { useAudioPlayer } from './hooks/useAudioPlayer'
-import { type Matrix } from './types'
-import { TabsGroup } from './components/TabsGroup'
-import { supabase } from './lib/supabase'
+import { useMatrices } from './hooks/useMatrices'
 
 function App() {
-  const [matrices, setMatrices] = useState<Matrix[]>([])
-
-  useEffect(() => {
-    const receiveMetadata = async () => {
-      const { data: mp3_metadata } = await supabase
-        .from('mp3_metadata')
-        .select('*')
-        .throwOnError()
-
-      if (mp3_metadata) {
-        setMatrices(mp3_metadata as Matrix[])
-      }
-    }
-
-    receiveMetadata()
-  }, [])
-
+  const { matrices } = useMatrices()
   const [search, setSearch] = useState('')
   const filteredMatrices = matrices
     .sort((a, b) => a.title.localeCompare(b.title))
@@ -65,7 +48,7 @@ function App() {
           currentAudio &&
           togglePlay(
             currentAudio,
-            matrices.find((m) => m.id === currentAudio)?.audioUrl || '',
+            matrices.find((m) => m.id === currentAudio)?.audioSource || '',
           )
         }
       />
