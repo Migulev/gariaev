@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { indexDB } from '@/lib/IndexDb'
+import { useHandleDownload } from '@/hooks/useHandleDownload'
 import { cn } from '@/lib/utils'
 import { Matrix } from '@/types'
-import { Download, Heart, Pause, Play } from 'lucide-react'
-import { useState } from 'react'
+import { Download, Heart, Pause, Play, Trash2 } from 'lucide-react'
+import { Progress } from './ui/progress'
 
 type MatrixCardProps = {
   matrix: Matrix
@@ -12,6 +12,7 @@ type MatrixCardProps = {
   isFavorite: boolean
   onTogglePlay: () => void
   onToggleFavorite: () => void
+  // onDeleteDownload: () => void
 }
 
 export function MatrixCard({
@@ -20,33 +21,13 @@ export function MatrixCard({
   isFavorite,
   onTogglePlay,
   onToggleFavorite,
+  // onDeleteDownload,
 }: MatrixCardProps) {
-  const [isDownloaded, setIsDownloaded] = useState(false)
-  const [isDownloading, setIsDownloading] = useState(false)
+  const { isDownloading, downloadProgress, handleDownload } =
+    useHandleDownload()
 
-  const handleDownload = async () => {
-    if (matrix.downloaded) {
-      return
-    }
-    setIsDownloading(true)
-    try {
-      const response = await fetch(matrix.audioSource as string)
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      const blob = await response.blob()
-      await indexDB.saveAudio({
-        id: matrix.id,
-        audioBlob: blob,
-        title: matrix.title,
-      })
-      setIsDownloaded(true)
-    } catch (error) {
-      console.error('Error downloading audio:', error)
-      alert('Failed to download audio: ' + (error as Error).message)
-    } finally {
-      setIsDownloading(false)
-    }
+  const onDeleteDownload = () => {
+    console.log('delete download')
   }
 
   return (
@@ -54,23 +35,37 @@ export function MatrixCard({
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{matrix.title}</CardTitle>
         <div className="flex items-center justify-center gap-2">
-          <Button
-            onClick={handleDownload}
-            variant="ghost"
-            size="icon"
-            className={cn('flex items-center justify-center', {
-              'cursor-none': matrix.downloaded,
-            })}
-            disabled={matrix.downloaded || isDownloading}
-          >
-            <Download className="h-4 w-4" />
-          </Button>
+          {matrix.downloaded ? (
+            <Button
+              onClick={onDeleteDownload}
+              variant="ghost"
+              size="icon"
+              className="flex items-center justify-center hover:text-destructive"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              onClick={() => handleDownload(matrix)}
+              variant="ghost"
+              size="icon"
+              className={cn('flex items-center justify-center', {
+                'cursor-none': matrix.downloaded,
+              })}
+              disabled={matrix.downloaded || isDownloading}
+            >
+              <Download className="h-4 w-4" />
+            </Button>
+          )}
           <Button variant="ghost" size="icon" onClick={onToggleFavorite}>
             <Heart className={isFavorite ? 'fill-red-500 text-red-500' : ''} />
           </Button>
         </div>
       </CardHeader>
       <CardContent>
+        {isDownloading && (
+          <Progress value={downloadProgress} className="mb-2" />
+        )}
         <Button onClick={onTogglePlay} className="mb-2 w-full">
           {isPlaying ? (
             <Pause className="mr-2 h-4 w-4" />
