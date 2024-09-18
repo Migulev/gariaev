@@ -1,7 +1,7 @@
-import { create } from 'zustand'
-import { Matrix, MatrixDTO, AudioFile } from '@/types'
-import { supabase } from '@/lib/supabase'
 import { indexDB } from '@/lib/indexDb'
+import { supabase } from '@/lib/supabase'
+import { AudioFile, Matrix, MatrixDTO } from '@/types'
+import { create } from 'zustand'
 
 interface MatrixStoreState {
   matrices: Matrix[]
@@ -10,21 +10,25 @@ interface MatrixStoreState {
   downloadProgress: number
   matrixIsDownloading: Matrix | null
 
-  setMatrices: (matrices: Matrix[]) => void
-  setDownloadMatrices: (matrices: Matrix[]) => void
   fetchMatrices: () => Promise<void>
   downloadMatrix: (matrix: Matrix) => Promise<void>
+  updateDownloadedMatrices: () => void
 }
 
 export const useMatrixStore = create<MatrixStoreState>((set, get) => ({
   matrices: [],
-  downloadedMatrices: [],
   isDownloading: false,
   downloadProgress: 0,
   matrixIsDownloading: null,
+  downloadedMatrices: [],
 
-  setMatrices: (matrices) => set({ matrices }),
-  setDownloadMatrices: (downloadedMatrices) => set({ downloadedMatrices }),
+  updateDownloadedMatrices: () => {
+    const downloadedMatrices = get().matrices.filter(
+      (matrix) => matrix.downloaded,
+    )
+    set({ downloadedMatrices })
+  },
+
   fetchMatrices: async () => {
     const { data: matricesDTO } = (await supabase
       .from('mp3_metadata')
@@ -43,10 +47,8 @@ export const useMatrixStore = create<MatrixStoreState>((set, get) => ({
       }
     }) as Matrix[]
 
-    const downloadedMatrices = matrices.filter((matrix) => matrix.downloaded)
-
     set({ matrices })
-    set({ downloadedMatrices })
+    get().updateDownloadedMatrices()
   },
 
   downloadMatrix: async (matrix: Matrix) => {
@@ -86,10 +88,14 @@ export const useMatrixStore = create<MatrixStoreState>((set, get) => ({
         title: matrix.title,
       })
 
-      const updatedMatrices = get().matrices.map((m) =>
-        m.id === matrix.id ? { ...m, audioSource: blob, downloaded: true } : m,
+      const updatedMatrices = get().matrices.map((matrix) =>
+        matrix.id === matrix.id
+          ? { ...matrix, audioSource: blob, downloaded: true }
+          : matrix,
       )
+
       set({ matrices: updatedMatrices })
+      get().updateDownloadedMatrices()
     } catch (error) {
       console.error('Error downloading audio:', error)
       alert('Failed to download audio: ' + (error as Error).message)
