@@ -38,10 +38,19 @@ export function TabsGroup({
     }
   }
 
+  const tabValueLogic = () => {
+    if (activeTab === 'favorites') {
+      return favorites.length > 0 ? activeTab : 'all'
+    }
+    if (activeTab === 'downloaded') {
+      return downloadedMatrices.length > 0 ? activeTab : 'all'
+    }
+    return 'all'
+  }
+
   return (
     <Tabs
-      // !todo implement logic
-      value={matrices.length > 0 ? activeTab : 'all'}
+      value={tabValueLogic()}
       onValueChange={(value) => handleTabChange(value as Tab)}
       className={cn('w-full', className)}
     >
