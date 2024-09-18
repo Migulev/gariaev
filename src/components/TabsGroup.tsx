@@ -23,24 +23,26 @@ export function TabsGroup({
 }) {
   const { favorites, toggleFavorite, setFavorites } = useFavorites()
   const [activeTab, setActiveTab] = usePersist<Tab>('activeTab', 'all')
-  const handleTabChange = (value: string) => {
-    setActiveTab(value as Tab)
+  const handleTabChange = (value: Tab) => {
+    setActiveTab(value)
   }
+  const downloadedMatrices = matrices.filter((matrix) => matrix.downloaded)
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEndFavorites = (event: DragEndEvent) => {
     const { active, over } = event
 
     if (active.id !== over?.id) {
-      const oldIndex = favorites.indexOf(active.id as number)
-      const newIndex = favorites.indexOf(over?.id as number)
+      const oldIndex = favorites.indexOf(active.id as Matrix['id'])
+      const newIndex = favorites.indexOf(over?.id as Matrix['id'])
       setFavorites(arrayMove(favorites, oldIndex, newIndex))
     }
   }
 
   return (
     <Tabs
+      // !todo implement logic
       value={matrices.length > 0 ? activeTab : 'all'}
-      onValueChange={handleTabChange}
+      onValueChange={(value) => handleTabChange(value as Tab)}
       className={cn('w-full', className)}
     >
       <TabsList>
@@ -49,6 +51,9 @@ export function TabsGroup({
         </TabsTrigger>
         <TabsTrigger value="favorites">
           <span className="text-sm font-medium">Избранные</span>
+        </TabsTrigger>
+        <TabsTrigger value="downloaded">
+          <span className="text-sm font-medium">Загруженные</span>
         </TabsTrigger>
       </TabsList>
       <TabsContent value="all">
@@ -66,7 +71,7 @@ export function TabsGroup({
       <TabsContent value="favorites">
         <DndContext
           collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
+          onDragEnd={handleDragEndFavorites}
         >
           <SortableContext items={favorites}>
             {favorites.map((id) => {
@@ -88,6 +93,30 @@ export function TabsGroup({
             })}
           </SortableContext>
         </DndContext>
+      </TabsContent>
+      <TabsContent value="downloaded">
+        {(() => {
+          const firstMatrices = favorites.map((id) =>
+            matrices.find((m) => m.id === id),
+          )
+          const secondMatrices = downloadedMatrices.filter(
+            (m) => !favorites.includes(m.id),
+          )
+          const allMatrices = [...firstMatrices, ...secondMatrices]
+          return allMatrices.map((matrix) => {
+            if (!matrix) return null
+            return (
+              <MatrixCard
+                key={matrix.id}
+                matrix={matrix}
+                isPlaying={playing === matrix.id && isPlaying}
+                isFavorite={favorites.includes(matrix.id)}
+                onTogglePlay={() => togglePlay(matrix.id, matrix.audioSource)}
+                onToggleFavorite={() => toggleFavorite(matrix.id)}
+              />
+            )
+          })
+        })()}
       </TabsContent>
     </Tabs>
   )
