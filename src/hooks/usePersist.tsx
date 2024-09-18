@@ -7,7 +7,7 @@ interface PersistOptions<T> {
 export function usePersist<T = string>(
   key: string,
   initialValue: T,
-  options?: PersistOptions<T>,
+  options?: PersistOptions<T>
 ) {
   const [value, setValue] = useState<T>(() => {
     const savedValue = localStorage.getItem(key)
@@ -25,7 +25,7 @@ export function usePersist<T = string>(
   useEffect(() => {
     localStorage.setItem(
       key,
-      typeof value === 'string' ? value : JSON.stringify(value),
+      typeof value === 'string' ? value : JSON.stringify(value)
     )
   }, [key, value])
 

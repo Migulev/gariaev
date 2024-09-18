@@ -32,7 +32,7 @@ export function MatrixCard({
   const isDownloading = useMatrixStore((state) => state.isDownloading)
   const downloadProgress = useMatrixStore((state) => state.downloadProgress)
   const matrixIsDownloading = useMatrixStore(
-    (state) => state.matrixIsDownloading,
+    (state) => state.matrixIsDownloading
   )
 
   return (

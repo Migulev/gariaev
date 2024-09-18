@@ -47,7 +47,7 @@ function App() {
           currentAudio &&
           togglePlay(
             currentAudio,
-            matrices.find((m) => m.id === currentAudio)?.audioSource || '',
+            matrices.find((m) => m.id === currentAudio)?.audioSource || ''
           )
         }
       />

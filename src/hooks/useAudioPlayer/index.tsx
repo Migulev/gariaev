@@ -39,7 +39,7 @@ export function useAudioPlayer() {
 
   const handlePlayNewAudio = (
     id: number | string,
-    audioSource: string | Blob,
+    audioSource: string | Blob
   ) => {
     setIsPlaying(false)
     if (audioRef.current) {
@@ -68,7 +68,7 @@ export function useAudioPlayer() {
           startBufferUpdate()
         })
       },
-      { once: true },
+      { once: true }
     )
 
     newAudio.addEventListener(
@@ -76,7 +76,7 @@ export function useAudioPlayer() {
       () => {
         setDuration(newAudio.duration)
       },
-      { once: true },
+      { once: true }
     )
 
     newAudio.load() // It resets the audio element to its initial state.
@@ -100,7 +100,7 @@ export function useAudioPlayer() {
 
   const togglePlay = async (
     id: number | string,
-    audioSource: string | Blob,
+    audioSource: string | Blob
   ) => {
     if (currentAudio === id) {
       handlePlaySameAudio()

@@ -24,7 +24,7 @@ export const useMatrixStore = create<MatrixStoreState>((set, get) => ({
 
   updateDownloadedMatrices: () => {
     const downloadedMatrices = get().matrices.filter(
-      (matrix) => matrix.downloaded,
+      (matrix) => matrix.downloaded
     )
     set({ downloadedMatrices })
   },
@@ -91,7 +91,7 @@ export const useMatrixStore = create<MatrixStoreState>((set, get) => ({
       const updatedMatrices = get().matrices.map((matrix) =>
         matrix.id === matrix.id
           ? { ...matrix, audioSource: blob, downloaded: true }
-          : matrix,
+          : matrix
       )
 
       set({ matrices: updatedMatrices })

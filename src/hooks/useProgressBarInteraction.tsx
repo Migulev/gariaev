@@ -17,13 +17,13 @@ export const useProgressBarInteraction = ({
         const clickPosition = clientX - rect.left
         const percentClicked = Math.max(
           0,
-          Math.min(1, clickPosition / rect.width),
+          Math.min(1, clickPosition / rect.width)
         )
         const newTime = percentClicked * duration
         onSeek(newTime)
       }
     },
-    [duration, onSeek],
+    [duration, onSeek]
   )
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {

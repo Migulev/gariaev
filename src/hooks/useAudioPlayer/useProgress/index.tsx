@@ -52,7 +52,7 @@ export function useProgress() {
         audioRef.current.play()
       }
     },
-    [audioRef, updateProgress],
+    [audioRef, updateProgress]
   )
 
   return {
