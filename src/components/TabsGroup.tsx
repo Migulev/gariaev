@@ -28,19 +28,9 @@ export function TabsGroup({
     setActiveTab(value)
   }
 
-  const tabValueLogic = () => {
-    if (activeTab === 'favorites') {
-      return favorites.length > 0 ? activeTab : 'all'
-    }
-    if (activeTab === 'downloaded') {
-      return downloadedMatrices.length > 0 ? activeTab : 'all'
-    }
-    return 'all'
-  }
-
   return (
     <Tabs
-      value={tabValueLogic()}
+      value={activeTab}
       onValueChange={(value) => handleTabChange(value as Tab)}
       className={cn('w-full', className)}
     >
@@ -69,56 +59,68 @@ export function TabsGroup({
         ))}
       </TabsContent>
       <TabsContent value="favorites">
-        <DndContext
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEndFavorites}
-        >
-          <SortableContext items={favorites}>
-            {favorites.map((id) => {
-              const matrix = matrices.find((m) => m.id === id)
-              if (!matrix) return null
-              return (
-                <SortableMatrix key={matrix.id} id={matrix.id}>
-                  <MatrixCard
-                    matrix={matrix}
-                    isPlaying={playing === matrix.id && isPlaying}
-                    isFavorite={true}
-                    onTogglePlay={() =>
-                      togglePlay(matrix.id, matrix.audioSource)
-                    }
-                    onToggleFavorite={() => toggleFavorite(matrix.id)}
-                    onDownload={() => downloadMatrix(matrix)}
-                  />
-                </SortableMatrix>
-              )
-            })}
-          </SortableContext>
-        </DndContext>
+        {favorites.length === 0 ? (
+          <p className="ml-4 mt-10 text-sm font-medium text-muted-foreground">
+            нет избранных матриц
+          </p>
+        ) : (
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEndFavorites}
+          >
+            <SortableContext items={favorites}>
+              {favorites.map((id) => {
+                const matrix = matrices.find((m) => m.id === id)
+                if (!matrix) return null
+                return (
+                  <SortableMatrix key={matrix.id} id={matrix.id}>
+                    <MatrixCard
+                      matrix={matrix}
+                      isPlaying={playing === matrix.id && isPlaying}
+                      isFavorite={true}
+                      onTogglePlay={() =>
+                        togglePlay(matrix.id, matrix.audioSource)
+                      }
+                      onToggleFavorite={() => toggleFavorite(matrix.id)}
+                      onDownload={() => downloadMatrix(matrix)}
+                    />
+                  </SortableMatrix>
+                )
+              })}
+            </SortableContext>
+          </DndContext>
+        )}
       </TabsContent>
       <TabsContent value="downloaded">
-        {(() => {
-          const firstMatrices = favorites.map((id) =>
-            matrices.find((m) => m.id === id && m.downloaded),
-          )
-          const secondMatrices = downloadedMatrices.filter(
-            (m) => !favorites.includes(m.id),
-          )
-          const allMatrices = [...firstMatrices, ...secondMatrices]
-          return allMatrices.map((matrix) => {
-            if (!matrix) return null
-            return (
-              <MatrixCard
-                key={matrix.id}
-                matrix={matrix}
-                isPlaying={playing === matrix.id && isPlaying}
-                isFavorite={favorites.includes(matrix.id)}
-                onTogglePlay={() => togglePlay(matrix.id, matrix.audioSource)}
-                onToggleFavorite={() => toggleFavorite(matrix.id)}
-                onDownload={() => downloadMatrix(matrix)}
-              />
+        {downloadedMatrices.length === 0 ? (
+          <p className="ml-4 mt-10 text-sm font-medium text-muted-foreground">
+            нет загруженных матриц
+          </p>
+        ) : (
+          (() => {
+            const firstMatrices = favorites.map((id) =>
+              matrices.find((m) => m.id === id && m.downloaded),
             )
-          })
-        })()}
+            const secondMatrices = downloadedMatrices.filter(
+              (m) => !favorites.includes(m.id),
+            )
+            const allMatrices = [...firstMatrices, ...secondMatrices]
+            return allMatrices.map((matrix) => {
+              if (!matrix) return null
+              return (
+                <MatrixCard
+                  key={matrix.id}
+                  matrix={matrix}
+                  isPlaying={playing === matrix.id && isPlaying}
+                  isFavorite={favorites.includes(matrix.id)}
+                  onTogglePlay={() => togglePlay(matrix.id, matrix.audioSource)}
+                  onToggleFavorite={() => toggleFavorite(matrix.id)}
+                  onDownload={() => downloadMatrix(matrix)}
+                />
+              )
+            })
+          })()
+        )}
       </TabsContent>
     </Tabs>
   )
