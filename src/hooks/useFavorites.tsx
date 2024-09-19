@@ -31,7 +31,7 @@ export function useFavorites() {
     if (active.id !== over?.id) {
       const oldIndex = favorites.indexOf(active.id as Matrix['id'])
       const newIndex = favorites.indexOf(over?.id as Matrix['id'])
-      setFavorites(arrayMove(favorites, oldIndex, newIndex))
+      saveFavorites(arrayMove(favorites, oldIndex, newIndex))
     }
   }
 
