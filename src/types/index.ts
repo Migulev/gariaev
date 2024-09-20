@@ -16,3 +16,7 @@ export type AudioFile = {
   audioBlob: Blob
   title: string
 }
+
+export type Id = number | string
+
+export type AudioSource = string | Blob

@@ -1,32 +1,39 @@
 import { useFavorites } from '@/hooks/useFavorites'
 import { usePersist } from '@/hooks/usePersist'
 import { cn } from '@/lib/utils'
-import { Tab, type Matrix } from '@/types'
+import { useMatrixStore } from '@/store/matrix.store'
+import { Matrix, Tab } from '@/types'
 import { closestCenter, DndContext } from '@dnd-kit/core'
 import { SortableContext } from '@dnd-kit/sortable'
 import { MatrixCard } from './MatrixCard'
 import { SortableMatrix } from './SortableMatrix'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
-import { useMatrixStore } from '@/store/matrix.store'
+import { useAudioPlayerStore } from '@/store/audioPlayer'
 
 export function TabsGroup({
-  playing,
-  togglePlay,
   className,
-  isPlaying,
+  matrices,
 }: {
-  playing: number | string | null
-  isPlaying: boolean
-  togglePlay: (id: Matrix['id'], audioSource: Matrix['audioSource']) => void
   className?: string
+  matrices: Matrix[]
 }) {
-  const { matrices, downloadedMatrices, downloadMatrix } = useMatrixStore()
+  const { downloadedMatrices, downloadMatrix } = useMatrixStore()
+  const { togglePlay, isPlaying, currentAudio } = useAudioPlayerStore()
 
   const { favorites, toggleFavorite, handleDragEndFavorites } = useFavorites()
   const [activeTab, setActiveTab] = usePersist<Tab>('activeTab', 'all')
   const handleTabChange = (value: Tab) => {
     setActiveTab(value)
   }
+
+  const filteredMatrices = matrices.filter((matrix) => {
+    if (activeTab === 'favorites') {
+      return favorites.includes(matrix.id)
+    } else if (activeTab === 'downloaded') {
+      return matrix.downloaded
+    }
+    return true
+  })
 
   return (
     <Tabs
@@ -46,11 +53,11 @@ export function TabsGroup({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="all">
-        {matrices.map((matrix) => (
+        {filteredMatrices.map((matrix) => (
           <MatrixCard
             key={matrix.id}
             matrix={matrix}
-            isPlaying={playing === matrix.id && isPlaying}
+            isPlaying={currentAudio === matrix.id && isPlaying}
             isFavorite={favorites.includes(matrix.id)}
             onTogglePlay={() => togglePlay(matrix.id, matrix.audioSource)}
             onToggleFavorite={() => toggleFavorite(matrix.id)}
@@ -70,13 +77,13 @@ export function TabsGroup({
           >
             <SortableContext items={favorites}>
               {favorites.map((id) => {
-                const matrix = matrices.find((m) => m.id === id)
+                const matrix = filteredMatrices.find((m) => m.id === id)
                 if (!matrix) return null
                 return (
                   <SortableMatrix key={matrix.id} id={matrix.id}>
                     <MatrixCard
                       matrix={matrix}
-                      isPlaying={playing === matrix.id && isPlaying}
+                      isPlaying={currentAudio === matrix.id && isPlaying}
                       isFavorite={true}
                       onTogglePlay={() =>
                         togglePlay(matrix.id, matrix.audioSource)
@@ -99,7 +106,7 @@ export function TabsGroup({
         ) : (
           (() => {
             const firstMatrices = favorites.map((id) =>
-              matrices.find((m) => m.id === id && m.downloaded)
+              filteredMatrices.find((m) => m.id === id && m.downloaded)
             )
             const secondMatrices = downloadedMatrices.filter(
               (m) => !favorites.includes(m.id)
@@ -111,7 +118,7 @@ export function TabsGroup({
                 <MatrixCard
                   key={matrix.id}
                   matrix={matrix}
-                  isPlaying={playing === matrix.id && isPlaying}
+                  isPlaying={currentAudio === matrix.id && isPlaying}
                   isFavorite={favorites.includes(matrix.id)}
                   onTogglePlay={() => togglePlay(matrix.id, matrix.audioSource)}
                   onToggleFavorite={() => toggleFavorite(matrix.id)}

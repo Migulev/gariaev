@@ -3,12 +3,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
 import { usePersist } from '@/hooks/usePersist'
 import { useProgressBarInteraction } from '@/hooks/useProgressBarInteraction'
-import { formatTime } from '@/lib/utils'
+import { cn, formatTime } from '@/lib/utils'
 import { Clock, Pause, Play, Volume2, VolumeX } from 'lucide-react'
 
-type ControlPanelProps = {
+type UIControlPanelProps = {
   isPlaying: boolean
-  currentAudio: { title: string } | undefined
+  audioTitle: string | undefined
   progress: number
   volume: number
   isMuted: boolean
@@ -19,11 +19,12 @@ type ControlPanelProps = {
   toggleMute: () => void
   onVolumeChange: (newVolume: number) => void
   onSeek: (time: number) => void
+  className?: string
 }
 
-export function ControlPanel({
+export function UIControlPanel({
   isPlaying,
-  currentAudio,
+  audioTitle,
   progress,
   volume,
   isMuted,
@@ -34,7 +35,8 @@ export function ControlPanel({
   toggleMute,
   onVolumeChange,
   onSeek,
-}: ControlPanelProps) {
+  className,
+}: UIControlPanelProps) {
   const [isReverseTime, setIsReverseTime] = usePersist('isReverseTime', false)
   const toggleTimeDisplay = () => {
     setIsReverseTime(!isReverseTime)
@@ -56,11 +58,11 @@ export function ControlPanel({
     useProgressBarInteraction({ duration, onSeek })
 
   return (
-    <Card className="mb-6">
+    <Card className={cn(className)}>
       <CardContent className="p-4">
         <div className="flex flex-wrap items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Button onClick={onTogglePlay} size="icon" disabled={!currentAudio}>
+            <Button onClick={onTogglePlay} size="icon" disabled={!audioTitle}>
               {isPlaying ? (
                 <Pause className="h-4 w-4" />
               ) : (
@@ -92,7 +94,7 @@ export function ControlPanel({
               <Clock className="h-4 w-4" />
             </Button>
           </div>
-          <p className="text-lg font-bold">{currentAudio?.title}</p>
+          <p className="text-lg font-bold">{audioTitle}</p>
           <div
             ref={progressBarRef}
             className="relative mt-2 h-2.5 w-full cursor-pointer rounded-full bg-gray-200 dark:bg-gray-700"
