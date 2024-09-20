@@ -1,14 +1,14 @@
 import { useFavorites } from '@/hooks/useFavorites'
 import { usePersist } from '@/hooks/usePersist'
 import { cn } from '@/lib/utils'
-import { useMatrixStore } from '@/store/matrix.store'
+import { useAudioPlayerStore } from '@/store/audioPlayer'
+import { useMatrixStore } from '@/store/matrix'
 import { Matrix, Tab } from '@/types'
 import { closestCenter, DndContext } from '@dnd-kit/core'
 import { SortableContext } from '@dnd-kit/sortable'
 import { MatrixCard } from './MatrixCard'
 import { SortableMatrix } from './SortableMatrix'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
-import { useAudioPlayerStore } from '@/store/audioPlayer'
 
 export function TabsGroup({
   className,

@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils'
+import { useMatrixStore } from '@/store/matrix'
 import { useState } from 'react'
 import { TabsGroup } from './TabsGroup'
 import { Input } from './ui/input'
-import { useMatrixStore } from '@/store/matrix.store'
 
 export function MatrixPanel({ className }: { className?: string }) {
   const [search, setSearch] = useState('')

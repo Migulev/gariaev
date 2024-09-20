@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 
 import { ControlPanel } from './components/control-panel'
-import { DownLoadBar } from './components/DownLoadBar'
 import { MatrixPanel } from './components/MatrixPanel'
-import { useMatrixStore } from './store/matrix.store'
+import { useMatrixStore } from './store/matrix'
+import { DownLoadBar } from './components/DownloadBar'
 
 function App() {
   const fetchMatrices = useMatrixStore((state) => state.fetchMatrices)

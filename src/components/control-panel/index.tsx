@@ -1,6 +1,6 @@
 import { useAudioPlayerStore } from '@/store/audioPlayer'
+import { useMatrixStore } from '@/store/matrix'
 import { UIControlPanel } from './ui-control-panel'
-import { useMatrixStore } from '@/store/matrix.store'
 
 export function ControlPanel({ className }: { className?: string }) {
   const {

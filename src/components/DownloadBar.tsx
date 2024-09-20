@@ -1,7 +1,7 @@
-import { useMatrixStore } from '@/store/matrix.store'
-import { Button } from './ui/button'
-import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useMatrixStore } from '@/store/matrix'
+import { X } from 'lucide-react'
+import { Button } from './ui/button'
 
 export function DownLoadBar({ className }: { className?: string }) {
   const {
