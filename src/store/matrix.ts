@@ -1,4 +1,4 @@
-import { indexDB } from '@/lib/indexDb'
+import { indexDB } from '@/lib/IndexDb'
 import { supabase } from '@/lib/supabase'
 import { AudioFile, Matrix, MatrixDTO } from '@/types'
 import { toast } from 'sonner'
