@@ -14,7 +14,6 @@ export interface ProgressState {
   updateProgress: () => void
   startProgressUpdate: () => void
   stopProgressUpdate: () => void
-  onSeek: (seekTime: number) => void
   updateBuffer: () => void
   startBufferUpdate: () => void
   stopBufferUpdate: () => void
@@ -57,18 +56,6 @@ export const createProgressSlice: StateCreator<
     if (progressIntervalRef.current) {
       clearInterval(progressIntervalRef.current)
       progressIntervalRef.current = null
-    }
-  },
-
-  onSeek: (seekTime) => {
-    const { audioRef, updateProgress } = get()
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = seekTime
-      updateProgress()
-      audioRef.current
-        .play()
-        .catch((error) => console.error('Error playing audio:', error))
     }
   },
 

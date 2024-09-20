@@ -8,6 +8,7 @@ export interface AudioPlayerBaseState {
   currentAudio: Id | null
   isPlaying: boolean
   setAudioRef: (node: HTMLAudioElement | null) => void
+  onSeek: (seekTime: number) => void
   togglePlay: (id: Id, audioSource: AudioSource) => void
   handlePlaySameAudio: () => void
   handlePlayNewAudio: (id: Id, audioSource: AudioSource) => void
@@ -29,6 +30,18 @@ export const useAudioPlayerStore = create<AudioPlayerState>(
         }
         return {}
       }),
+
+    onSeek: (seekTime) => {
+      const { audioRef, updateProgress } = get()
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.currentTime = seekTime
+        updateProgress()
+        audioRef.current
+          .play()
+          .catch((error) => console.error('Error playing audio:', error))
+      }
+    },
 
     togglePlay: (id: Id, audioSource: AudioSource) => {
       const { currentAudio, handlePlaySameAudio, handlePlayNewAudio } = get()
