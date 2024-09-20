@@ -1,10 +1,11 @@
 import { useState } from 'react'
 
-import { warningContext, WarningParams } from './context'
+import { warningContext } from './context'
 import { WarningModal } from './modal'
+import { WarningModalParams, WarningParams } from './types'
 
 export function Warning({ children }: { children?: React.ReactNode }) {
-  const [modalParams, setModalParams] = useState<WarningParams>()
+  const [modalParams, setModalParams] = useState<WarningModalParams>()
 
   const getWarning = (params: WarningParams) => {
     return new Promise<boolean>((resolve) => {

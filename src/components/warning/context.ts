@@ -1,11 +1,5 @@
 import { createStrictContext, useStrictContext } from '@/lib/utils'
-
-export interface WarningParams {
-  title?: string
-  description?: string
-  closeText?: string
-  onClose?: () => void
-}
+import { WarningParams } from './types'
 
 export type WarningContext = {
   getWarning: (params: WarningParams) => Promise<boolean>
