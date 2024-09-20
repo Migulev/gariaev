@@ -4,6 +4,7 @@ import { confirmationContext, ConfirmationParams } from './context'
 
 import { ConfirmModalParams } from '@/types'
 import { ConfirmationModal } from './modal'
+import { defaultConfirmationParams } from './constants'
 
 export function Confirmations({ children }: { children?: React.ReactNode }) {
   const [modalParams, setModalParams] = useState<ConfirmModalParams>()
@@ -42,13 +43,4 @@ export function Confirmations({ children }: { children?: React.ReactNode }) {
       {modalParams && <ConfirmationModal {...modalParams} />}
     </confirmationContext.Provider>
   )
-}
-
-const defaultConfirmationParams: ConfirmModalParams = {
-  title: 'Подтвердите действие',
-  description: 'Вы уверены что хотите продолжить?',
-  closeText: 'Отмена',
-  confirmText: 'Подтвердить',
-  onClose: () => {},
-  onConfirm: () => {},
 }
