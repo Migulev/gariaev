@@ -108,9 +108,10 @@ export function TabsGroup({
             const firstMatrices = favorites.map((id) =>
               filteredMatrices.find((m) => m.id === id && m.downloaded)
             )
-            const secondMatrices = downloadedMatrices.filter(
-              (m) => !favorites.includes(m.id)
-            )
+            const secondMatrices = downloadedMatrices
+              .filter((m) => !favorites.includes(m.id))
+              .filter((m) => matrices.includes(m))
+
             const allMatrices = [...firstMatrices, ...secondMatrices]
             return allMatrices.map((matrix) => {
               if (!matrix) return null
