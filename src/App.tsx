@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { ControlPanel } from './components/control-panel'
 import { MatrixPanel } from './components/MatrixPanel'
 import { useMatrixStore } from './store/matrix'
-import { DownLoadBar } from './components/DownloadBar'
+import { DownloadStatus } from './components/DownloadStatus'
 
 function App() {
   const fetchMatrices = useMatrixStore((state) => state.fetchMatrices)
@@ -18,7 +18,7 @@ function App() {
       <ControlPanel className="mt-6" />
       <MatrixPanel className="mt-6" />
 
-      <DownLoadBar className="absolute right-4 top-4 z-50" />
+      <DownloadStatus className="absolute right-4 top-4 z-50" />
     </div>
   )
 }
