@@ -1,4 +1,4 @@
-import { Id, type AudioFile } from '@/types'
+import { Id, AudioFile } from '@/types'
 
 const DB_NAME = 'MatrixAudioDB'
 const STORE_NAME = 'audioFiles'
