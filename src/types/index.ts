@@ -18,12 +18,3 @@ export type AudioFile = {
   audioBlob: Blob
   title: string
 }
-
-export type ConfirmModalParams = {
-  title: string
-  description: string
-  closeText: string
-  confirmText: string
-  onClose: () => void
-  onConfirm: () => void
-}

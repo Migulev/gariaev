@@ -1,4 +1,3 @@
-import { ConfirmModalParams } from '@/types'
 import { Button } from '../ui/button'
 import {
   Credenza,
@@ -8,6 +7,7 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from '../ui/credenza'
+import { ConfirmationModalParams } from './types'
 
 export const ConfirmationModal = ({
   title,
@@ -16,7 +16,7 @@ export const ConfirmationModal = ({
   confirmText,
   onClose,
   onConfirm,
-}: ConfirmModalParams) => {
+}: ConfirmationModalParams) => {
   return (
     <form
       onKeyDown={(e) => {

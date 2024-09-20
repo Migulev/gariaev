@@ -1,17 +1,13 @@
 import { useState } from 'react'
 
-import { confirmationContext, ConfirmationParams } from './context'
+import { confirmationContext } from './context'
 
-import { ConfirmModalParams } from '@/types'
 import { ConfirmationModal } from './modal'
 import { defaultConfirmationParams } from './constants'
+import { ConfirmationParams, ConfirmationModalParams } from './types'
 
-export function Confirmations({ children }: { children?: React.ReactNode }) {
-  const [modalParams, setModalParams] = useState<ConfirmModalParams>()
-
-  const closeConfirmation = () => {
-    modalParams?.onClose()
-  }
+export function Confirmation({ children }: { children?: React.ReactNode }) {
+  const [modalParams, setModalParams] = useState<ConfirmationModalParams>()
 
   const getConfirmation = (params: ConfirmationParams) => {
     return new Promise<boolean>((resolve) => {
@@ -23,7 +19,6 @@ export function Confirmations({ children }: { children?: React.ReactNode }) {
           resolve(true)
         },
         onClose: () => {
-          closeConfirmation()
           setModalParams(undefined)
           resolve(false)
         },
@@ -35,7 +30,6 @@ export function Confirmations({ children }: { children?: React.ReactNode }) {
     <confirmationContext.Provider
       value={{
         getConfirmation,
-        closeConfirmation,
       }}
     >
       {children}
