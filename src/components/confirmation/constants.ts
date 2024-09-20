@@ -1,10 +1,8 @@
-import { ConfirmationModalParams } from './types'
+import { ConfirmationParams } from './types'
 
-export const defaultConfirmationParams: ConfirmationModalParams = {
+export const defaultConfirmationParams: ConfirmationParams = {
   title: 'Подтвердите действие',
   description: 'Вы уверены что хотите продолжить?',
   closeText: 'Отмена',
   confirmText: 'Подтвердить',
-  onClose: () => {},
-  onConfirm: () => {},
 }

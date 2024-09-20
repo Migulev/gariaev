@@ -1,4 +1,4 @@
-import { useGetConfirmation } from '@/components/confirmation/context'
+import { useGetConfirmation } from '@/components/confirmation'
 import { useMatrixStore } from '@/store/matrix'
 import { Matrix } from '@/types'
 
@@ -10,8 +10,9 @@ export const useDeleteMatrix = () => {
     const confirmation = await getConfirmation({
       title: 'Удаление матрицы',
       description: `Вы уверены, что хотите удалить матрицу "${matrix.title}"?`,
+      confirmText: 'Удалить',
+      closeText: 'Отменить',
     })
-
     if (confirmation) {
       deleteMatrixStore(matrix)
     }
