@@ -1,4 +1,4 @@
-import { type AudioFile } from '@/types'
+import { Id, type AudioFile } from '@/types'
 
 const DB_NAME = 'MatrixAudioDB'
 const STORE_NAME = 'audioFiles'
@@ -35,6 +35,17 @@ export const indexDB = {
       const request = store.getAll()
       request.onerror = () => reject(request.error)
       request.onsuccess = () => resolve(request.result)
+    })
+  },
+
+  deleteAudio: async (id: Id) => {
+    const db = await openDB()
+    return new Promise<void>((resolve, reject) => {
+      const transaction = db.transaction(STORE_NAME, 'readwrite')
+      const store = transaction.objectStore(STORE_NAME)
+      const request = store.delete(id)
+      request.onerror = () => reject(request.error)
+      request.onsuccess = () => resolve()
     })
   },
 }

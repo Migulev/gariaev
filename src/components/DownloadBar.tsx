@@ -8,7 +8,7 @@ export function DownLoadBar({ className }: { className?: string }) {
     isDownloading,
     downloadProgress,
     matrixIsDownloading,
-    // cancelDownload, // Add this line
+    cancelDownload,
   } = useMatrixStore()
 
   if (!isDownloading) return null
@@ -16,7 +16,7 @@ export function DownLoadBar({ className }: { className?: string }) {
     <div className={cn('w-64 rounded-md bg-white p-4 shadow-md', className)}>
       <div className="flex items-end justify-between">
         <p className="text-sm font-bold">скачивается</p>
-        <Button variant="destructive" size="icon">
+        <Button variant="destructive" size="icon" onClick={cancelDownload}>
           <X size={16} />
         </Button>
       </div>

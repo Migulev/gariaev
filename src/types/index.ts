@@ -12,7 +12,7 @@ export type Matrix = Omit<MatrixDTO, 'audioUrl'> & {
 export type Tab = 'all' | 'favorites' | 'downloaded'
 
 export type AudioFile = {
-  id: Matrix['id']
+  id: Id
   audioBlob: Blob
   title: string
 }

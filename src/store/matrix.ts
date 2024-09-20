@@ -1,6 +1,7 @@
 import { indexDB } from '@/lib/indexDb'
 import { supabase } from '@/lib/supabase'
 import { AudioFile, Matrix, MatrixDTO } from '@/types'
+import { toast } from 'sonner'
 import { create } from 'zustand'
 
 interface MatrixStoreState {
@@ -9,10 +10,13 @@ interface MatrixStoreState {
   isDownloading: boolean
   downloadProgress: number
   matrixIsDownloading: Matrix | null
+  abortController: AbortController | null
 
   fetchMatrices: () => Promise<void>
   downloadMatrix: (matrix: Matrix) => Promise<void>
   updateDownloadedMatrices: () => void
+  deleteMatrix: (matrix: Matrix) => Promise<void>
+  cancelDownload: () => void
 }
 
 export const useMatrixStore = create<MatrixStoreState>((set, get) => ({
@@ -21,6 +25,7 @@ export const useMatrixStore = create<MatrixStoreState>((set, get) => ({
   downloadProgress: 0,
   matrixIsDownloading: null,
   downloadedMatrices: [],
+  abortController: null,
 
   updateDownloadedMatrices: () => {
     const downloadedMatrices = get().matrices.filter(
@@ -55,13 +60,17 @@ export const useMatrixStore = create<MatrixStoreState>((set, get) => ({
     if (matrix.downloaded) {
       return
     }
+    const abortController = new AbortController()
     set({
       isDownloading: true,
       downloadProgress: 0,
       matrixIsDownloading: matrix,
+      abortController,
     })
     try {
-      const response = await fetch(matrix.audioSource as string)
+      const response = await fetch(matrix.audioSource as string, {
+        signal: abortController.signal,
+      })
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -96,15 +105,40 @@ export const useMatrixStore = create<MatrixStoreState>((set, get) => ({
 
       set({ matrices: updatedMatrices })
       get().updateDownloadedMatrices()
+      toast.success(`Скачивание ${matrix.title} завершено успешно!`)
     } catch (error) {
-      console.error('Error downloading audio:', error)
-      alert('Failed to download audio: ' + (error as Error).message)
+      if ((error as Error).name === 'AbortError') {
+        toast.error('Скачивание отменено')
+      } else {
+        console.error('Error downloading audio:', error)
+        toast.error('Ошибка скачивания аудио: ' + (error as Error).message)
+      }
     } finally {
       set({
         isDownloading: false,
         downloadProgress: 0,
         matrixIsDownloading: null,
+        abortController: null,
       })
     }
+  },
+
+  cancelDownload: () => {
+    const { abortController } = get()
+    if (abortController) {
+      abortController.abort()
+      set({
+        isDownloading: false,
+        downloadProgress: 0,
+        matrixIsDownloading: null,
+        abortController: null,
+      })
+    }
+  },
+
+  deleteMatrix: async (matrix: Matrix) => {
+    await indexDB.deleteAudio(matrix.id)
+    get().fetchMatrices()
+    toast.success(`${matrix.title} матрица удалена`)
   },
 }))

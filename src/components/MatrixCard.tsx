@@ -5,35 +5,30 @@ import { useMatrixStore } from '@/store/matrix'
 import { Matrix } from '@/types'
 import { Download, Heart, Pause, Play, Trash2 } from 'lucide-react'
 import { Progress } from './ui/progress'
+import { useAudioPlayerStore } from '@/store/audioPlayer'
 
 type MatrixCardProps = {
   matrix: Matrix
-  isPlaying: boolean
   isFavorite: boolean
-
-  onTogglePlay: () => void
+  isPlaying: boolean
   onToggleFavorite: () => void
-  // onDeleteDownload: () => void
-  onDownload: () => void
 }
 
 export function MatrixCard({
   matrix,
-  isPlaying,
   isFavorite,
-  onTogglePlay,
   onToggleFavorite,
-  onDownload,
+  isPlaying,
 }: MatrixCardProps) {
-  const onDeleteDownload = () => {
-    console.log('delete download')
-  }
-
+  const deleteMatrix = useMatrixStore((state) => state.deleteMatrix)
+  const downloadMatrix = useMatrixStore((state) => state.downloadMatrix)
   const isDownloading = useMatrixStore((state) => state.isDownloading)
   const downloadProgress = useMatrixStore((state) => state.downloadProgress)
   const matrixIsDownloading = useMatrixStore(
     (state) => state.matrixIsDownloading
   )
+
+  const togglePlay = useAudioPlayerStore((state) => state.togglePlay)
 
   return (
     <Card className="w-full">
@@ -42,7 +37,7 @@ export function MatrixCard({
         <div className="flex items-center justify-center gap-2">
           {matrix.downloaded ? (
             <Button
-              onClick={onDeleteDownload}
+              onClick={() => deleteMatrix(matrix)}
               variant="ghost"
               size="icon"
               className="flex items-center justify-center hover:text-destructive"
@@ -51,7 +46,7 @@ export function MatrixCard({
             </Button>
           ) : (
             <Button
-              onClick={onDownload}
+              onClick={() => downloadMatrix(matrix)}
               variant="ghost"
               size="icon"
               className={cn('flex items-center justify-center', {
@@ -71,7 +66,10 @@ export function MatrixCard({
         {matrixIsDownloading?.id === matrix.id && (
           <Progress value={downloadProgress} className="mb-2" />
         )}
-        <Button onClick={onTogglePlay} className="mb-2 w-full">
+        <Button
+          onClick={() => togglePlay(matrix.id, matrix.audioSource)}
+          className="mb-2 w-full"
+        >
           {isPlaying ? (
             <Pause className="mr-2 h-4 w-4" />
           ) : (
