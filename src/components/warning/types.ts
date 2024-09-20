@@ -1,7 +1,7 @@
 export type WarningParams = {
-  title?: string
-  description?: string
-  closeText?: string
+  title: string
+  description: string
+  acknowledgeText: string
 }
 
 export type WarningModalParams = WarningParams & {
