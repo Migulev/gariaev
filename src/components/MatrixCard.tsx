@@ -6,6 +6,7 @@ import { Matrix } from '@/types'
 import { Download, Heart, Pause, Play, Trash2 } from 'lucide-react'
 import { Progress } from './ui/progress'
 import { useAudioPlayerStore } from '@/store/audioPlayer'
+import { useDeleteMatrix } from '@/hooks/useDeleteMatrix'
 
 type MatrixCardProps = {
   matrix: Matrix
@@ -20,13 +21,13 @@ export function MatrixCard({
   onToggleFavorite,
   isPlaying,
 }: MatrixCardProps) {
-  const deleteMatrix = useMatrixStore((state) => state.deleteMatrix)
   const downloadMatrix = useMatrixStore((state) => state.downloadMatrix)
   const isDownloading = useMatrixStore((state) => state.isDownloading)
   const downloadProgress = useMatrixStore((state) => state.downloadProgress)
   const matrixIsDownloading = useMatrixStore(
     (state) => state.matrixIsDownloading
   )
+  const { deleteMatrix } = useDeleteMatrix()
 
   const togglePlay = useAudioPlayerStore((state) => state.togglePlay)
 
