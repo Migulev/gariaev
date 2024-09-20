@@ -48,4 +48,26 @@ export const indexDB = {
       request.onsuccess = () => resolve()
     })
   },
+
+  getStorageEstimate: async () => {
+    if ('storage' in navigator && 'estimate' in navigator.storage) {
+      try {
+        const estimate = await navigator.storage.estimate()
+        const totalSpace = estimate.quota ?? 0
+        const usedSpace = estimate.usage ?? 0
+        const freeSpace = totalSpace - usedSpace
+        return {
+          totalSpace,
+          usedSpace,
+          freeSpace,
+          percentageUsed: totalSpace ? (usedSpace / totalSpace) * 100 : 0,
+        }
+      } catch (error) {
+        console.error('Error estimating storage:', error)
+        throw error
+      }
+    } else {
+      throw new Error('Storage estimation not supported in this browser')
+    }
+  },
 }
