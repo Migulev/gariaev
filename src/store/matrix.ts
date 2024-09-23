@@ -62,20 +62,35 @@ export const useMatrix = createSelectorFunctions(
       if (matrix.downloaded) {
         return
       }
-      const abortController = new AbortController()
-      set({
-        isDownloading: true,
-        downloadProgress: 0,
-        matrixIsDownloading: matrix,
-        abortController,
-      })
+
       try {
         const response = await fetch(matrix.audioSource as string, {
-          signal: abortController.signal,
+          method: 'HEAD',
         })
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
+        const fileSize = parseInt(
+          response.headers.get('Content-Length') || '0',
+          10
+        )
+
+        const storageEstimate = await indexDB.getStorageEstimate()
+        const freeSpace = storageEstimate.freeSpace || 0
+
+        if (fileSize > freeSpace) {
+          toast.error('Недостаточно места для скачивания файла')
+          return
+        }
+
+        const abortController = new AbortController()
+        set({
+          isDownloading: true,
+          downloadProgress: 0,
+          matrixIsDownloading: matrix,
+          abortController,
+        })
+
         const reader = response.body?.getReader()
         if (!reader) throw new Error('Response body is null')
         const contentLength = +(response.headers.get('Content-Length') ?? 0)
@@ -87,7 +102,6 @@ export const useMatrix = createSelectorFunctions(
           if (done) break
           chunks.push(value)
           receivedLength += value.length
-          // Check if download is still active before updating state
           if (get().isDownloading) {
             set({
               downloadProgress: Math.round(
@@ -114,12 +128,8 @@ export const useMatrix = createSelectorFunctions(
         get().updateDownloadedMatrices()
         toast.success(`Скачивание ${matrix.title} завершено успешно!`)
       } catch (error) {
-        if ((error as Error).name === 'AbortError') {
-          toast.error('Скачивание отменено')
-        } else {
-          console.error('Error downloading audio:', error)
-          toast.error('Ошибка скачивания аудио: ' + (error as Error).message)
-        }
+        console.error('Error downloading audio:', error)
+        toast.error('Ошибка скачивания аудио: ' + (error as Error).message)
       } finally {
         if (get().isDownloading) {
           set({
