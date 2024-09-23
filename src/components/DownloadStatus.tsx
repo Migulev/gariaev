@@ -1,15 +1,13 @@
 import { cn } from '@/lib/utils'
-import { useMatrixStore } from '@/store/matrix'
+import { useMatrix } from '@/store/matrix'
 import { X } from 'lucide-react'
 import { Button } from './ui/button'
 
 export function DownloadStatus({ className }: { className?: string }) {
-  const {
-    isDownloading,
-    downloadProgress,
-    matrixIsDownloading,
-    cancelDownload,
-  } = useMatrixStore()
+  const isDownloading = useMatrix.use.isDownloading()
+  const downloadProgress = useMatrix.use.downloadProgress()
+  const matrixIsDownloading = useMatrix.use.matrixIsDownloading()
+  const cancelDownload = useMatrix.use.cancelDownload()
 
   if (!isDownloading) return null
   return (

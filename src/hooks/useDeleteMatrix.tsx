@@ -1,9 +1,9 @@
 import { useGetConfirmation } from '@/components/confirmation'
-import { useMatrixStore } from '@/store/matrix'
+import { useMatrix } from '@/store/matrix'
 import { Matrix } from '@/types'
 
 export const useDeleteMatrix = () => {
-  const deleteMatrixStore = useMatrixStore((state) => state.deleteMatrix)
+  const deleteMatrixStore = useMatrix.use.deleteMatrix()
   const getConfirmation = useGetConfirmation()
 
   const deleteMatrix = async (matrix: Matrix) => {
@@ -14,7 +14,7 @@ export const useDeleteMatrix = () => {
       closeText: 'Отменить',
     })
     if (confirmation) {
-      deleteMatrixStore(matrix)
+      await deleteMatrixStore(matrix)
     }
   }
 

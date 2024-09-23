@@ -1,24 +1,22 @@
-import { useAudioPlayerStore } from '@/store/audioPlayer'
-import { useMatrixStore } from '@/store/matrix'
+import { useAudioPlayer } from '@/store/audioPlayer'
+import { useMatrix } from '@/store/matrix'
 import { UIControlPanel } from './ui-control-panel'
 
 export function ControlPanel({ className }: { className?: string }) {
-  const {
-    currentAudio,
-    isPlaying,
-    progress,
-    volume,
-    isMuted,
-    duration,
-    buffered,
-    currentTime,
-    togglePlay,
-    onSeek,
-    toggleMute,
-    onVolumeChange,
-  } = useAudioPlayerStore()
+  const currentAudio = useAudioPlayer.use.currentAudio()
+  const isPlaying = useAudioPlayer.use.isPlaying()
+  const progress = useAudioPlayer.use.progress()
+  const volume = useAudioPlayer.use.volume()
+  const isMuted = useAudioPlayer.use.isMuted()
+  const duration = useAudioPlayer.use.duration()
+  const buffered = useAudioPlayer.use.buffered()
+  const currentTime = useAudioPlayer.use.currentTime()
+  const togglePlay = useAudioPlayer.use.togglePlay()
+  const onSeek = useAudioPlayer.use.onSeek()
+  const toggleMute = useAudioPlayer.use.toggleMute()
+  const onVolumeChange = useAudioPlayer.use.onVolumeChange()
 
-  const matrices = useMatrixStore((state) => state.matrices)
+  const matrices = useMatrix.use.matrices()
 
   return (
     <UIControlPanel

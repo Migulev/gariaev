@@ -3,10 +3,10 @@ import { useEffect } from 'react'
 import { ControlPanel } from './components/control-panel'
 import { DownloadStatus } from './components/DownloadStatus'
 import { MatrixPanel } from './components/MatrixPanel'
-import { useMatrixStore } from './store/matrix'
+import { useMatrix } from './store/matrix'
 
 export const App = () => {
-  const fetchMatrices = useMatrixStore((state) => state.fetchMatrices)
+  const fetchMatrices = useMatrix.use.fetchMatrices()
 
   useEffect(() => {
     fetchMatrices()

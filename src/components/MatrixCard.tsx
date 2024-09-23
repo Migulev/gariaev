@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { useMatrixStore } from '@/store/matrix'
+import { useMatrix } from '@/store/matrix'
 import { Matrix } from '@/types'
 import { Download, Heart, Pause, Play, Trash2 } from 'lucide-react'
 import { Progress } from './ui/progress'
-import { useAudioPlayerStore } from '@/store/audioPlayer'
+import { useAudioPlayer } from '@/store/audioPlayer'
 import { useDeleteMatrix } from '@/hooks/useDeleteMatrix'
 
 type MatrixCardProps = {
@@ -21,15 +21,13 @@ export function MatrixCard({
   onToggleFavorite,
   isPlaying,
 }: MatrixCardProps) {
-  const downloadMatrix = useMatrixStore((state) => state.downloadMatrix)
-  const isDownloading = useMatrixStore((state) => state.isDownloading)
-  const downloadProgress = useMatrixStore((state) => state.downloadProgress)
-  const matrixIsDownloading = useMatrixStore(
-    (state) => state.matrixIsDownloading
-  )
+  const downloadMatrix = useMatrix.use.downloadMatrix()
+  const isDownloading = useMatrix.use.isDownloading()
+  const downloadProgress = useMatrix.use.downloadProgress()
+  const matrixIsDownloading = useMatrix.use.matrixIsDownloading()
   const { deleteMatrix } = useDeleteMatrix()
 
-  const togglePlay = useAudioPlayerStore((state) => state.togglePlay)
+  const togglePlay = useAudioPlayer.use.togglePlay()
 
   return (
     <Card className="w-full">

@@ -1,8 +1,8 @@
 import { useFavorites } from '@/hooks/useFavorites'
 import { usePersist } from '@/hooks/usePersist'
 import { cn } from '@/lib/utils'
-import { useAudioPlayerStore } from '@/store/audioPlayer'
-import { useMatrixStore } from '@/store/matrix'
+import { useAudioPlayer } from '@/store/audioPlayer'
+import { useMatrix } from '@/store/matrix'
 import { Matrix, Tab } from '@/types'
 import { closestCenter, DndContext } from '@dnd-kit/core'
 import { SortableContext } from '@dnd-kit/sortable'
@@ -17,9 +17,9 @@ export function TabsGroup({
   className?: string
   matrices: Matrix[]
 }) {
-  const downloadedMatrices = useMatrixStore((state) => state.downloadedMatrices)
-  const currentAudio = useAudioPlayerStore((state) => state.currentAudio)
-  const isPlaying = useAudioPlayerStore((state) => state.isPlaying)
+  const downloadedMatrices = useMatrix.use.downloadedMatrices()
+  const currentAudio = useAudioPlayer.use.currentAudio()
+  const isPlaying = useAudioPlayer.use.isPlaying()
 
   const { favorites, toggleFavorite, handleDragEndFavorites } = useFavorites()
   const [activeTab, setActiveTab] = usePersist<Tab>('activeTab', 'all')

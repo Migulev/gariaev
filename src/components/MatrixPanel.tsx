@@ -1,12 +1,12 @@
 import { cn } from '@/lib/utils'
-import { useMatrixStore } from '@/store/matrix'
+import { useMatrix } from '@/store/matrix'
 import { useState } from 'react'
 import { TabsGroup } from './TabsGroup'
 import { Input } from './ui/input'
 
 export function MatrixPanel({ className }: { className?: string }) {
   const [search, setSearch] = useState('')
-  const matrices = useMatrixStore((state) => state.matrices)
+  const matrices = useMatrix.use.matrices()
   const filteredMatrices = matrices.filter((matrix) =>
     matrix.title.toLowerCase().startsWith(search.toLowerCase())
   )

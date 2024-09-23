@@ -1966,6 +1966,11 @@ at-least-node@^1.0.0:
   resolved "https://registry.npmjs.org/at-least-node/-/at-least-node-1.0.0.tgz"
   integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
 
+auto-zustand-selectors-hook@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/auto-zustand-selectors-hook/-/auto-zustand-selectors-hook-2.0.5.tgz#62d5d0106a40bee0ba1b9af3cd34e5be5640e762"
+  integrity sha512-42vgvFylb4TvMT7SSyXG1YCkA4fmgS7mInXCDBk/EEZfsTyFOVypKpwnse7SBtz77ZqWU5V9nEYmFRtDLnZW9Q==
+
 autoprefixer@^10.4.20:
   version "10.4.20"
   resolved "https://registry.npmjs.org/autoprefixer/-/autoprefixer-10.4.20.tgz"
