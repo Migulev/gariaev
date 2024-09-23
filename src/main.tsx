@@ -3,13 +3,11 @@ import { createRoot } from 'react-dom/client'
 import { Toaster } from 'sonner'
 import { App } from './App.tsx'
 import { Confirmation } from './components/confirmation'
-import { Warning } from './components/warning'
 import './index.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
-    <Warning />
     <Confirmation />
     <Toaster position="top-right" richColors />
   </StrictMode>
