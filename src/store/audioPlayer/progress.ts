@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand'
-import { AudioPlayerBaseState } from '.'
+import { AudioPlayerBaseState } from './audioPlayer'
 
 export interface ProgressState {
   progress: number
