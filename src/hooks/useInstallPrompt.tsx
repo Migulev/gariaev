@@ -61,10 +61,12 @@ export function useInstallPrompt() {
       setDeferredPrompt(null)
     } else if (isIOS) {
       alert(
-        'To install the app on iOS, tap the share button and then "Add to Home Screen".'
+        'Чтобы установить приложение на iOS, нажмите на кнопку "Поделиться" и добавьте его на главный экран. "На экран Домой". To install the app on iOS, tap the share button and then "Add to Home Screen".'
       )
     } else {
-      alert('To install the app, add this page to your home screen.')
+      alert(
+        'Чтобы установить приложение, добавьте эту страницу на главный экран.'
+      )
     }
   }
 
