@@ -59,26 +59,23 @@ export const useMatrix = createSelectorFunctions(
     },
 
     downloadMatrix: async (matrix: Matrix) => {
-      if (matrix.downloaded) {
-        return
-      }
+      if (matrix.downloaded) return
 
       try {
-        const response = await fetch(matrix.audioSource as string, {
-          method: 'HEAD',
-        })
+        const response = await fetch(matrix.audioSource as string)
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
-        const fileSize = parseInt(
-          response.headers.get('Content-Length') || '0',
-          10
-        )
+
+        const contentLength = +(response.headers.get('Content-Length') ?? 0)
+
+        if (contentLength === 0) {
+          throw new Error('Response body is empty')
+        }
 
         const storageEstimate = await indexDB.getStorageEstimate()
         const freeSpace = storageEstimate.freeSpace || 0
-
-        if (fileSize > freeSpace) {
+        if (contentLength > freeSpace) {
           toast.error('Недостаточно места для скачивания файла')
           return
         }
@@ -93,19 +90,22 @@ export const useMatrix = createSelectorFunctions(
 
         const reader = response.body?.getReader()
         if (!reader) throw new Error('Response body is null')
-        const contentLength = +(response.headers.get('Content-Length') ?? 0)
-        let receivedLength = 0
         const chunks = []
 
         while (true) {
           const { done, value } = await reader.read()
           if (done) break
+          if (!value) {
+            console.warn('Received undefined value from reader')
+            continue
+          }
           chunks.push(value)
-          receivedLength += value.length
           if (get().isDownloading) {
             set({
               downloadProgress: Math.round(
-                (receivedLength / contentLength) * 100
+                (chunks.reduce((acc, curr) => acc + curr.length, 0) /
+                  contentLength) *
+                  100
               ),
             })
           }
