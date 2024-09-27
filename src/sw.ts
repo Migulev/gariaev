@@ -37,28 +37,20 @@ self.addEventListener('fetch', ((event: FetchEvent) => {
       (async function () {
         try {
           const response = await fetch(event.request)
-          const clonedResponse = response.clone()
-          const data: MatrixDTO[] = await clonedResponse.json()
+          const data: MatrixDTO[] = await response.clone().json()
 
           const cache = await caches.open(CACHE_NAME)
           await cache.put(event.request, new Response(JSON.stringify(data)))
 
-          return new Response(JSON.stringify(data), {
-            headers: clonedResponse.headers,
-          })
-        } catch {
+          return response
+        } catch (error) {
           const cache = await caches.open(CACHE_NAME)
-          const cachedResponses = await cache.matchAll()
-          const allMatrixData: MatrixDTO[] = []
+          const cachedResponse = await cache.match(event.request)
 
-          for (const response of cachedResponses) {
-            const data = await response.json()
-            allMatrixData.push(...data)
+          if (cachedResponse) {
+            return cachedResponse
           }
-
-          return new Response(JSON.stringify(allMatrixData), {
-            headers: { 'Content-Type': 'application/json' },
-          })
+          throw error
         }
       })()
     )
