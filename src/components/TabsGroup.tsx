@@ -9,6 +9,7 @@ import { SortableContext } from '@dnd-kit/sortable'
 import { MatrixCard } from './MatrixCard'
 import { SortableMatrix } from './SortableMatrix'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
+import { useOnlineStatus } from '@/hooks/useOnlineStatus'
 
 export function TabsGroup({
   className,
@@ -27,6 +28,8 @@ export function TabsGroup({
     setActiveTab(value)
   }
 
+  const isOnline = useOnlineStatus()
+
   const filteredMatrices = matrices.filter((matrix) => {
     if (activeTab === 'favorites') {
       return favorites.includes(matrix.id)
@@ -38,7 +41,7 @@ export function TabsGroup({
 
   return (
     <Tabs
-      value={activeTab}
+      value={isOnline ? activeTab : 'downloaded'}
       onValueChange={(value) => handleTabChange(value as Tab)}
       className={cn('w-full', className)}
     >
