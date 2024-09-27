@@ -81,6 +81,7 @@ export function UIControlPanel({
             <Slider
               value={[isMuted ? 0 : volume * 100]}
               onValueChange={(value) => onVolumeChange(value[0] / 100)}
+              onValueCommit={(value) => onVolumeChange(value[0] / 100)}
               max={100}
               step={1}
               className="w-full max-w-xs"
