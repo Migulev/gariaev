@@ -33,11 +33,12 @@ export const createVolumeSlice: StateCreator<
   },
 
   onVolumeChange: (newVolume: number) => {
-    set({ volume: newVolume })
-    localStorage.setItem(VOLUME_KEY, newVolume.toString())
-    const { audioRef, isMuted } = get()
+    const normalizedVolume = newVolume <= 1 ? newVolume : newVolume / 100
+    set({ volume: normalizedVolume, isMuted: false })
+    localStorage.setItem(VOLUME_KEY, normalizedVolume.toString())
+    const { audioRef } = get()
     if (audioRef.current) {
-      audioRef.current.volume = isMuted ? 0 : newVolume
+      audioRef.current.volume = normalizedVolume
     }
   },
 
