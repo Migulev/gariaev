@@ -97,22 +97,22 @@ export function UIControlPanel({
           <p className="text-lg font-bold">{audioTitle}</p>
           <div
             ref={progressBarRef}
-            className="relative mt-2 h-2.5 w-full cursor-pointer rounded-full bg-gray-200 dark:bg-gray-700"
+            className="relative mt-2 h-2.5 w-full cursor-pointer rounded-full bg-primary/35"
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
           >
             {/* Buffered progress bar */}
             <div
-              className="absolute h-2.5 rounded-full bg-gray-400"
+              className="absolute h-2.5 rounded-full bg-muted-foreground"
               style={{ width: `${buffered}%` }}
             ></div>
             {/* Playback progress bar */}
             <div
-              className="bg-progressBar absolute h-2.5 rounded-full"
+              className="absolute h-2.5 rounded-full bg-primary"
               style={{ width: `${progress}%` }}
             >
               {/* Rounded point at the end of progress bar */}
-              <div className="bg-progressBar absolute right-0 top-1/2 h-5 w-5 -translate-y-1/2 translate-x-1/2 transform rounded-full border-2 border-white"></div>
+              <div className="absolute right-0 top-1/2 h-5 w-5 -translate-y-1/2 translate-x-1/2 transform rounded-full border-2 border-background bg-primary"></div>
             </div>
           </div>
           <div className="mt-1 flex justify-between text-sm">

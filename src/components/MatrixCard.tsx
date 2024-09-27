@@ -57,7 +57,9 @@ export function MatrixCard({
             </Button>
           )}
           <Button variant="ghost" size="icon" onClick={onToggleFavorite}>
-            <Heart className={isFavorite ? 'fill-red-500 text-red-500' : ''} />
+            <Heart
+              className={isFavorite ? 'fill-destructive text-destructive' : ''}
+            />
           </Button>
         </div>
       </CardHeader>
