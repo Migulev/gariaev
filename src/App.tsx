@@ -21,11 +21,15 @@ export const App = () => {
     <div className="no-scrollbar container relative mx-auto h-screen overflow-auto p-2">
       <OfflineBar />
 
-      <div className="mt-2 flex items-center justify-between">
+      <div className="mt-2 flex items-center justify-between gap-4">
         <h1 className="text-3xl font-bold">Матрицы Гаряева</h1>
 
         {isInstallable && (
-          <Button variant="destructive" onClick={installApp}>
+          <Button
+            variant="destructive"
+            className="h-fit max-w-72 whitespace-normal"
+            onClick={installApp}
+          >
             Установить приложение на устройство
           </Button>
         )}
