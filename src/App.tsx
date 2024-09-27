@@ -11,7 +11,7 @@ import { Button } from './components/ui/button'
 export const App = () => {
   const fetchMatrices = useMatrix.use.fetchMatrices()
 
-  const { isInstallable, installApp } = useInstallPrompt()
+  const { isInstallable, installApp, isIOS } = useInstallPrompt()
 
   useEffect(() => {
     fetchMatrices()
@@ -21,16 +21,16 @@ export const App = () => {
     <div className="no-scrollbar container relative mx-auto h-screen overflow-auto p-2">
       <OfflineBar />
 
-      <div className="mt-2 flex items-center justify-between gap-4">
+      <div className="mt-2 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Матрицы Гаряева</h1>
 
         {isInstallable && (
           <Button
             variant="destructive"
-            className="h-fit max-w-72 whitespace-normal"
+            className="max-w-40 whitespace-normal text-xs md:whitespace-nowrap"
             onClick={installApp}
           >
-            Установить приложение на устройство
+            {isIOS ? 'Добавить на главный экран' : 'Установить приложение'}
           </Button>
         )}
       </div>
