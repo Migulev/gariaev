@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Slider } from '@/components/ui/slider'
+import { useIsTouchDevice } from '@/hooks/useIsTouchDevice'
 import { usePersist } from '@/hooks/usePersist'
 import { useProgressBarInteraction } from '@/hooks/useProgressBarInteraction'
 import { cn, formatTime } from '@/lib/utils'
@@ -57,6 +58,8 @@ export function UIControlPanel({
   const { progressBarRef, handleMouseDown, handleTouchStart } =
     useProgressBarInteraction({ duration, onSeek })
 
+  const isTouchDevice = useIsTouchDevice()
+
   return (
     <Card className={cn(className)}>
       <CardContent className="p-4">
@@ -78,14 +81,16 @@ export function UIControlPanel({
                 <Volume2 className="h-4 w-4 flex-shrink-0" />
               )}
             </Button>
-            <Slider
-              value={[isMuted ? 0 : volume * 100]}
-              onValueChange={(value) => onVolumeChange(value[0] / 100)}
-              onValueCommit={(value) => onVolumeChange(value[0] / 100)}
-              max={100}
-              step={1}
-              className="w-full max-w-xs"
-            />
+            {!isTouchDevice && (
+              <Slider
+                value={[isMuted ? 0 : volume * 100]}
+                onValueChange={(value) => onVolumeChange(value[0] / 100)}
+                onValueCommit={(value) => onVolumeChange(value[0] / 100)}
+                max={100}
+                step={1}
+                className="w-full max-w-xs"
+              />
+            )}
           </div>
         </div>
         <div className="mt-4">
