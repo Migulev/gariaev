@@ -37,7 +37,7 @@ export const App = () => {
       <ControlPanel className="mt-6" />
       <MatrixPanel className="mt-6" />
 
-      <DownloadStatus className="absolute right-4 top-4 z-50" />
+      <DownloadStatus className="fixed right-4 top-4 z-50" />
     </div>
   )
 }

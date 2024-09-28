@@ -12,7 +12,10 @@ export function DownloadStatus({ className }: { className?: string }) {
   if (!isDownloading) return null
   return (
     <div
-      className={cn('w-64 rounded-md border bg-white p-4 shadow-md', className)}
+      className={cn(
+        'w-64 rounded-md border bg-background p-4 shadow-md',
+        className
+      )}
     >
       <div className="flex items-end justify-between">
         <p className="text-sm font-bold">скачивается</p>
