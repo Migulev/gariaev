@@ -54,6 +54,8 @@ export const useMatrix = createSelectorFunctions(
         }
       }) as Matrix[]
 
+      matrices.sort((a, b) => a.title.localeCompare(b.title))
+
       set({ matrices })
       get().updateDownloadedMatrices()
     },
