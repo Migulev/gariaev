@@ -64,7 +64,12 @@ export const useMatrix = createSelectorFunctions(
       if (matrix.downloaded) return
 
       try {
-        const response = await fetch(matrix.audioSource as string)
+        const abortController = new AbortController()
+        set({ abortController })
+
+        const response = await fetch(matrix.audioSource as string, {
+          signal: abortController.signal,
+        })
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
@@ -82,12 +87,10 @@ export const useMatrix = createSelectorFunctions(
           return
         }
 
-        const abortController = new AbortController()
         set({
           isDownloading: true,
           downloadProgress: 0,
           matrixIsDownloading: matrix,
-          abortController,
         })
 
         const reader = response.body?.getReader()
@@ -130,8 +133,12 @@ export const useMatrix = createSelectorFunctions(
         get().updateDownloadedMatrices()
         toast.success(`Скачивание ${matrix.title} завершено успешно!`)
       } catch (error) {
-        console.error('Error downloading audio:', error)
-        toast.error('Ошибка скачивания аудио: ' + (error as Error).message)
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          toast.error('Скачивание аудио было прервано')
+        } else {
+          console.error('Error downloading audio:', error)
+          toast.error('Ошибка скачивания аудио: ' + (error as Error).message)
+        }
       } finally {
         if (get().isDownloading) {
           set({
