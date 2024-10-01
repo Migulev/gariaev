@@ -5,13 +5,13 @@ import { DownloadStatus } from './components/DownloadStatus'
 import { MatrixPanel } from './components/MatrixPanel'
 import { OfflineBar } from './components/OfflineBar'
 import { useMatrix } from './store/matrix'
-import { useInstallPrompt } from './hooks/useInstallPrompt'
+import { useInstallApp } from './hooks/useInstallApp'
 import { Button } from './components/ui/button'
 
 export const App = () => {
   const fetchMatrices = useMatrix.use.fetchMatrices()
 
-  const { isInstallable, installApp, isIOS } = useInstallPrompt()
+  const { isInstallable, installApp, isIOS } = useInstallApp()
 
   useEffect(() => {
     fetchMatrices()

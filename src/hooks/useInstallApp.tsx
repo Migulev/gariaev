@@ -5,7 +5,7 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
 }
 
-export function useInstallPrompt() {
+export function useInstallApp() {
   const [isInstallable, setIsInstallable] = useState(false)
   const [isIOS, setIsIOS] = useState(false)
   const deferredPromptRef = useRef<BeforeInstallPromptEvent | null>(null)
@@ -17,29 +17,39 @@ export function useInstallPrompt() {
       setIsInstallable(true)
     }
 
+    const checkInstallation = async () => {
+      if ('getInstalledRelatedApps' in navigator) {
+        console.log('Checking installation')
+        const installedApps = await (navigator as any).getInstalledRelatedApps()
+        if (installedApps.length > 0) {
+          console.log('Installed apps:', installedApps)
+          setIsInstallable(false)
+          return
+        }
+      }
+      setIsInstallable(!deferredPromptRef.current)
+    }
+
     window.addEventListener(
       'beforeinstallprompt',
       handleBeforeInstallPrompt as EventListener
     )
 
-    // Check if it's iOS
-    const isIOSDevice =
-      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
-    setIsIOS(isIOSDevice)
-
-    const checkInstallation = setTimeout(() => {
-      if (!deferredPromptRef.current) {
-        setIsInstallable(true)
-      }
-    }, 3000)
+    // Check after a short delay
+    setTimeout(checkInstallation, 3000)
 
     return () => {
-      clearTimeout(checkInstallation)
       window.removeEventListener(
         'beforeinstallprompt',
         handleBeforeInstallPrompt as EventListener
       )
     }
+  }, [])
+
+  useEffect(() => {
+    const isIOSDevice =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
+    setIsIOS(isIOSDevice)
   }, [])
 
   const installApp = async () => {
