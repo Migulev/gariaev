@@ -5,13 +5,9 @@ import { DownloadStatus } from './components/DownloadStatus'
 import { MatrixPanel } from './components/MatrixPanel'
 import { OfflineBar } from './components/OfflineBar'
 import { useMatrix } from './store/matrix'
-import { useInstallApp } from './hooks/useInstallApp'
-import { Button } from './components/ui/button'
 
 export const App = () => {
   const fetchMatrices = useMatrix.use.fetchMatrices()
-
-  const { isInstallable, installApp, isIOS } = useInstallApp()
 
   useEffect(() => {
     fetchMatrices()
@@ -23,7 +19,7 @@ export const App = () => {
 
       <div className="mt-2 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Матрицы Гаряева</h1>
-
+        {/* 
         {isInstallable && (
           <Button
             variant="destructive"
@@ -32,7 +28,7 @@ export const App = () => {
           >
             {isIOS ? 'Добавить на главный экран' : 'Установить приложение'}
           </Button>
-        )}
+        )} */}
       </div>
       <ControlPanel className="mt-6" />
       <MatrixPanel className="mt-6" />

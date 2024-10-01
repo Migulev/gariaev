@@ -1,5 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 
+interface RelatedApplication {
+  platform: string
+  url: string
+  id?: string
+}
+
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
@@ -20,7 +26,11 @@ export function useInstallApp() {
     const checkInstallation = async () => {
       if ('getInstalledRelatedApps' in navigator) {
         console.log('Checking installation')
-        const installedApps = await (navigator as any).getInstalledRelatedApps()
+        const installedApps = await (
+          navigator as Navigator & {
+            getInstalledRelatedApps(): Promise<RelatedApplication[]>
+          }
+        ).getInstalledRelatedApps()
         if (installedApps.length > 0) {
           console.log('Installed apps:', installedApps)
           setIsInstallable(false)
